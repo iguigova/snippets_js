@@ -1,0 +1,40 @@
+
+.header1
+{
+    font-size:14px; 
+    font-weight:bold; 
+    padding:5px
+}
+
+.header2
+{ 
+    margin:5px; 
+    padding:5px
+}
+
+.detail1
+{ 
+    display:none; 
+    margin-left:40px
+}
+
+.detail2
+{ 
+    display:none; 
+    margin-left:60px
+}
+
+.detail3
+{ 
+    display:none; 
+    margin-left:80px
+}
+
+.detailswitch
+{ 
+    border: 1px solid #696969; 
+    color: #696969; 
+    margin:5px; 
+    font-size:10px; 
+    cursor:pointer
+}
