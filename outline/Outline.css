@@ -4,35 +4,28 @@
     display:none;
 }
 
-.header1
+.invisible
+{
+    visibility:hidden;
+}
+
+.header
+{ 
+    margin:5px; 
+    padding:5px
+}
+
+.h1
 {
     font-size:14px; 
     font-weight:bold; 
     padding:5px
 }
 
-.header2
-{ 
-    margin:5px; 
-    padding:5px
-}
-
-.detail1
+.detail
 { 
     display:none; 
     margin-left:40px
-}
-
-.detail2
-{ 
-    display:none; 
-    margin-left:60px
-}
-
-.detail3
-{ 
-    display:none; 
-    margin-left:80px
 }
 
 .detailswitch

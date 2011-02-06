@@ -50,25 +50,24 @@ var OutlineParser = {
 
             var header = document.createElement('span');
             header.innerHTML = caption;
-            header.className = 'header' + idx;
+            header.className = 'header h' + idx;
             headercontainer.appendChild(header);
 
             // add details
+            var detailswitch = document.createElement('span');
+            detailswitch.innerHTML = '+/-';
+            detailswitch.className = (details) ? 'detailswitch' : 'detailswitch invisible';	
+            headercontainer.insertBefore(detailswitch, header);
             if (details){
-                var detailswitch = document.createElement('span');
-                detailswitch.innerHTML = '+/-';
-                detailswitch.className = 'detailswitch'
-                //Event.add(detailswitch, 'mouseover', function(c){
                 Event.add(detailswitch, 'click', function(c, scope){
                     return function () {
                         return scope.toggleContent(c);
                     };
-                }(caption, this));		
-                headercontainer.insertBefore(detailswitch, header);
+                }(caption, this));
 
                 var detailcontainer = document.createElement('div');
                 detailcontainer.id = caption;
-                detailcontainer.className = 'detail' + idx;
+                detailcontainer.className = 'detail d' + idx;
                 container.appendChild(detailcontainer);
 
                 this.parseContent(details, detailcontainer, idx);
