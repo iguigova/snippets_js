@@ -1,6 +1,24 @@
 
 var OutlineParser = {
 
+    content: function(text){
+        var parse = function(arr){
+            var newarr = [];
+            for(var i = 0, len = arr.length; i < len; i++){
+                if (/[\S]+/.test(arr[i])){
+                    var subarr = arr[i].replace(/[\s]{0,4}(?=[\S])/gm, "").split(/[\n](?=[\S])/gm);
+                    if (subarr.length > 1){
+                        newarr.push([subarr[0], parse(subarr.slice(1))]);
+                    } else { 
+                        newarr.push(subarr[0]);
+                    }
+                }
+            }
+            return newarr;
+        };   
+        return parse(text.split(/[\n](?=[\S])/m));
+    },
+
     // Copyright 2006,2007 Bontrager Connection, LLC
     // http://bontragerconnection.com/ and http://www.willmaster.com/
     // http://www.willmaster.com/blog/css/floating-layer-at-cursor-position.php
@@ -24,8 +42,8 @@ var OutlineParser = {
             if (typeof(el) == 'string'){
                 caption = el;
                 details = null;
-            } 
-
+            }
+            
             // add caption
             var headercontainer = document.createElement('div');
             container.appendChild(headercontainer);
@@ -53,7 +71,7 @@ var OutlineParser = {
                 detailcontainer.className = 'detail' + idx;
                 container.appendChild(detailcontainer);
 
-                parseContent(details, detailcontainer, idx);
+                this.parseContent(details, detailcontainer, idx);
             }
         }
     }

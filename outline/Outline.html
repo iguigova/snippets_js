@@ -3,13 +3,21 @@
 <html>
 <head>
     <link rel="stylesheet" href="Outline.css" type="text/css">
+</head>
+
+<body onload="OutlineParser.parseContent(OutlineParser.content(document.getElementById('rawcontent').innerHTML), document.getElementById('content'));">
+    <div id='content'></div>
+    <pre id='rawcontent' class='hidden'>
+Level1-1
+    Level2-1
+        Level3-21
+            Level4-321
+    Level2-2
+        Level3-22  
+Level1-2
+    </pre>
 
     <script type="text/javascript" src="../share/Dom.js"></script>
     <script type="text/javascript" src="OutlineParser.js"></script>
-    <script type="text/javascript" src="OutlineContent.js"></script>
-</head>
-
-<body onload="OutlineParser.parseContent(content, document.getElementById('content'));">
-    <div id='content'></div>
 </body> 
 </html>

@@ -1,4 +1,9 @@
 
+.hidden
+{
+    display:none;
+}
+
 .header1
 {
     font-size:14px; 
