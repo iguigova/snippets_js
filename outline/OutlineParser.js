@@ -3,7 +3,6 @@ var OutlineParser = {
 
     content: function(text){
         var parse = function(arr){
-                    console.info(arr);
             var newarr = [];
             for(var i = 0, len = arr.length; i < len; i++){
                 if (/[\S]+/.test(arr[i])){
