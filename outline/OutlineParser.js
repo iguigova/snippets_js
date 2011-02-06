@@ -3,10 +3,11 @@ var OutlineParser = {
 
     content: function(text){
         var parse = function(arr){
+                    console.info(arr);
             var newarr = [];
             for(var i = 0, len = arr.length; i < len; i++){
                 if (/[\S]+/.test(arr[i])){
-                    var subarr = arr[i].replace(/[\s]{0,4}(?=[\S])/gm, "").split(/[\n](?=[\S])/gm);
+                    var subarr = arr[i].replace(/([ ]{2,4}(?=[\S])|\t(?=[\S]))/gm, "").split(/[\n](?=[\S])/m);
                     if (subarr.length > 1){
                         newarr.push([subarr[0], parse(subarr.slice(1))]);
                     } else { 
