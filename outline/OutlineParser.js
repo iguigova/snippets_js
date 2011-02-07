@@ -29,10 +29,23 @@ var OutlineParser = {
         //dd.style.display = dipslaystyle;
     },
 
+    // http://matthom.com/archive/2007/05/03/removing-all-child-nodes-from-an-element
+    clearContent: function clearContent(container){       
+        if (container && container.hasChildNodes()){
+            while (container.childNodes.length >= 1){
+                container.removeChild(container.firstChild);
+            }
+        }
+    },
+
     parseContent: function parseContent(content, container, idx){
         if (!content || !container) { return; }
 
         idx = (idx || 0) + 1;
+
+        if (idx == 1){
+            this.clearContent(container);
+        }
 
         // each element is in the form [a, [a]], [a, []], or [a]
         for(var i = 0, len = content.length; i < len; i++){
