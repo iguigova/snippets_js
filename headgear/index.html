@@ -2,18 +2,19 @@
 
 <html>
 <head>
-<title>About</title>
+<title>HeadGear</title>
 
 <link rel="stylesheet" type="text/css" href="headgear.css" />
+<script type="text/javascript" src="headgear.js"></script>
 </head>
-<body>
+<body onload="HG.load()">
 
-<ul class="menu">
-  <li class="menu"><a href="#PointyHat">PointyHat</a></li>
-  <li class="menu"><a href="#Blog">Blog</a></li>
-  <li class="menu"><a href="#Customers">Customers</a></li>
-  <li class="menu"><a href="#Product">Product</a></li>
-  <li class="menu"><a href="#Home">Home</a></li>
+<ul class="menu"> 
+  <li class="menu"><a href="#PointyHat" onclick="HG.update(this)">PointyHat</a></li>
+  <li class="menu"><a href="#Blog" onclick="HG.update(this)">Blog</a></li>
+  <li class="menu"><a href="#Customers" onclick="HG.update(this)">Customers</a></li>
+  <li class="menu"><a href="#Product" onclick="HG.update(this)">Product</a></li>
+  <li class="menu"><a href="#Home" onclick="HG.update(this)">Home</a></li>
 </ul>
 
 <h1><img  class="logo" src="KingHat.jpg" alt="PointyHat Software" /> HeadGear 0.1</h1>
@@ -21,44 +22,23 @@
 <hr/>
 
 <div id="Home" class="content">
-
 <p class="bold"><span class="ref" title="Link to PointyHat website">we</span> stand behind <span class="ref" title="Link to the product details page">software</span> that <span class="ref" title="Link to successful user stories">works</span> for <span class="ref" title="Link to a list of customers and quotes">you</span>.</p>
 <p> 
 <ul>
-<li>timesheets 
-<span class="prompt">
-<a href=""><img title="Video" src="watch.jpg" alt="watch" /></a>
-<a href=""><img title="Documentation" src="readmore.jpg" alt="read" /></a>
-<a href=""><img title="Forum" src="feedback.jpg" alt="discuss" /></a>
-</span>
-</li>
-<li>document management
-<span class="prompt">
-<a href=""><img title="Video" src="watch.jpg" alt="watch" /></a>
-<a href=""><img title="Documentation" src="readmore.jpg" alt="read" /></a>
-<a href=""><img title="Forum" src="feedback.jpg" alt="discuss" /></a>
-</span>
-</li>
-<li>job assignment
-<span class="prompt">
-<a href=""><img title="Video" src="watch.jpg" alt="watch" /></a>
-<a href=""><img title="Documentation" src="readmore.jpg" alt="read" /></a>
-<a href=""><img title="Forum" src="feedback.jpg" alt="discuss" /></a>
-</span>
-</li>
-<li>reports
-<span class="prompt">
-<a href=""><img title="Video" src="watch.jpg" alt="watch" /></a>
-<a href=""><img title="Documentation" src="readmore.jpg" alt="read" /></a>
-<a href=""><img title="Forum" src="feedback.jpg" alt="discuss" /></a>
-</span>
-</li>
+<li id="timesheets" class="prompt">timesheets</li>
+<li id="documents" class="prompt">document management</li>
+<li id="jobs" class="prompt">job assignment</li>
+<li id="reports" class="prompt">reports</li>
 </ul>
 </p>
 </div>
 
-<div id="Product">
+<div id="Product" class="hidden">
 
+</div>
+
+<div id="Customers" class="hidden">
+  <p>test</p>
 </div>
 
 <p class="footer">Talk to us today: <span class="bold">604-404-0444 | info@pointyhat.com</span> </p>

@@ -34,8 +34,14 @@ li
 
 img
 {
+    border: none 0px;
     vertical-align: bottom;
     margin-right: 5px;
+}
+
+.hidden
+{
+    display: none;
 }
 
 .bold
@@ -43,7 +49,7 @@ img
     font-weight: bold;
 }
 
-.prompt
+.prompt span
 {
     /*margin-left: 10px;*/
     float: right;
@@ -94,7 +100,6 @@ li.menu
 {
     color: #ffffff;
     background-color: #332F29;
-    margin-top: 100px;
     padding: 5px 10px;
 }
 
