@@ -1,0 +1,46 @@
+
+In their book, Rework (http://37signals.com/rework/), 37signals say that we can embrace constraints. According to them, "Constraints are advantages in disguise. Limited resources force you to make do with what you've got. There's no room for waste. And that forces you to be creative."
+
+I agree with this hypothesis. And recently, I came across a challenge from David Klein (http://tehdik.com/) to make the following html look awesome using 10 lines (or fewer) of CSS (http://10lines.tumblr.com/): 
+
+<html>
+ <body>
+  <div id="box">
+   <div id="text">
+    10 lines or fewer
+   </div>
+  </div>
+ </body>
+</html>
+
+Simple as it is, the task is very restricted to be interesting and quick. 
+
+My solution was to insert a unicode character and play with it as a funky background. 
+
+References: 
+http://www.alanwood.net/demos/wingdings.html
+http://archivist.incutio.com/viewlist/css-discuss/60075
+http://alanhogan.com/tips/css/special-characters-in-generated-content
+
+On a tangent: 
+Here is how to make an awesome button by Matt Richardson: 
+http://blog.makezine.com/archive/2011/04/the-awesome-button.html
+
+Here is the implementation by rondeVera (http://rondevera.com/): 
+#text {
+
+  width: 12em; height: 12em;
+
+  background: #06c; background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.25)), color-stop(0.5, rgba(0, 0, 0, 0.25)), color-stop(0.5, rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0.5))), -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.25)), color-stop(0.5, rgba(0, 0, 0, 0.25)), color-stop(0.5, rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0.5))); background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5)), -moz-linear-gradient(left, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5)); background-image: linear-gradient(top, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5)), linear-gradient(left, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5));
+
+  -moz-background-size: 3.5em 3.5em; -webkit-background-size: 3.5em 3.5em; background-size: 3.5em 3.5em;
+
+  -moz-border-radius: 10em; -webkit-border-radius: 10em; border-radius: 10em;
+
+  color: #fff;
+
+  font: 2em/12em Helvetica;
+
+  text-align: center;
+
+  -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); transform: rotate(-45deg); }
