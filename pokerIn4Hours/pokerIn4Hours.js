@@ -1,6 +1,6 @@
 $(function() {
-    var getPlayerScore = function(input){
-
+    var evalHand = function(input){
+        if (!input) return;
         input = input.replace(/\s+/g, '').replace(/,[Jj]/g, ',11').replace(/,[Qq]/g, ',12').replace(/,[Kk]/g, ',13').replace(/,[Aa]/g, ',14').split(',');
 
         var hand = [];
@@ -10,7 +10,7 @@ $(function() {
         hand['S'] = [];
         for (var i = 1, len = input.length; i < len; i++)
         {
-            hand[input[i].slice(input[i].length - 1)][input[i].slice(0, input[i].length - 1)] = 1; 
+            input[i] && (hand[input[i].slice(input[i].length - 1)][input[i].slice(0, input[i].length - 1)] = 1); 
         }
 
         var y = [];  // calculate based on card face
@@ -41,32 +41,33 @@ $(function() {
     };
 
 
-    var test = function(selector){
+    var run = function(selector){
         $(selector).each(function(idx){ 
 
             var node = $(this);
-            var input = eval(node.text());
+            var hands = node.text().split('\n');
 
             var winner = {};
-            for (var i = 0, len = input.length; i < len; i++)
+            for (var i = 0, len = hands.length; i < len; i++)
             {
-                var hand = getPlayerScore(input[i][0]);
+                var hand = evalHand(hands[i]) || {};
                 winner = ((winner.score || 0) < hand.score) ? hand : winner;
-                if (winner.score == hand.score) winner.player = winner.player + ', ' + hand.player;
+                winner.player += ((winner.score == hand.score) ? ', ' + hand.player : '');
             }
 
-            $('#A').append('<div><br/>Test: ' +  node.attr('id') + ' ' + node.attr('winner') + node.text() + '</br> Winner: <b>' + winner.player.split(',').slice(1) + '</b></br> Score: ' + winner.score + '</div>');
+            $('#A').append('<div><br/>Test: ' +  node.attr('id') + ' ' + node.attr('winner') + ': ' + node.text() + '</br> Winner: <b>' + winner.player.split(',').slice(1) + '</b></br> Score: ' + winner.score + '</div>');
 
         });
     };
 
-    test($('div[winner]'));
+    run($('div[winner]'));
+    //run($('#T0'));
 
     // Assumptions: 
     // (1) the number of hands is a positive random integer
     // (2) the number of cards in a hand is a positive random integer
     // (3) the hands may have cards from more than one deck
-    // (4)
+    // (4) duplicate cards within a hand are ignored (from the score)
     // (5) each card is represented by 2-letter words, where the 1st letter identifies the face (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
     // (6) the input contains the name of the player and the set of cards that form the player's hand where entities are comma-separated. 
     // (7) the player name is does not contain spaces; if it does, they will not be present in the output (while the result will still be correct)
