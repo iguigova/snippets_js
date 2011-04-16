@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <style>div {display: none;} #A, #A>div {display: block;} </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+$(function() {
+   var getHand = function(input){
+
+       input = input.replace(/\s+/g, '').replace(/,[Jj]/g, ',11').replace(/,[Qq]/g, ',12').replace(/,[Kk]/g, ',13').replace(/,[Aa]/g, ',14').split(',');
+
+       var hand = {};
+       hand['D'] = [];
+       hand['H'] = [];
+       hand['C'] = [];
+       hand['S'] = [];
+       for (var i = 1, len = input.length; i < len; i++)
+       {
+          hand[input[i].slice(input[i].length - 1)][input[i].slice(0, input[i].length - 1)] = 1; 
+       }
+
+       var y = [];  // calculate based on card face
+       var hc = 0;  // high card
+       var k2 = 0;  // two of a kind
+       var k3 = 0;  // three of a kind
+       for (var i = 2; i < 15; i++)
+       {
+           y[i] = (hand['D'][i]||0) + (hand['H'][i]||0) + (hand['C'][i]||0) + (hand['S'][i]||0);
+           hc = (y[i]) ? i : hc;
+           k2 = (y[i] === 2) ? Math.pow(10, 2) * i : k2;
+           k3 = (y[i] === 3) ? Math.pow(10, 3) * i : k3;
+       };
+
+       var x = []; // calculate based on suite
+       var xfunc = function(a, b){ a = a || 0; b = b || 0; return a + b; }; 
+       var xrlt = function(a) { return (a < 5) ? 0 : a};
+       for (var i = 2; i < 15; i++)
+       {
+           x['D'] = xfunc(x['D'], hand['D'][i]);
+           x['H'] = xfunc(x['H'], hand['H'][i]);
+           x['C'] = xfunc(x['C'], hand['C'][i]);
+           x['S'] = xfunc(x['S'], hand['S'][i]);
+       }
+       var flash = xrlt(x['D']) + xrlt(x['H']) + xrlt(x['C']) + xrlt(x['S']);     
+
+       return {player: input[0],  score: hc + k2 + k3 + Math.pow(10, flash) * hc};
+    };
+
+   // TODO: Report error handling
+
+   var tid = "#T0";
+   var tnode = $(tid);
+   var input = eval(tnode.text());
+
+   var winner = {};
+   for (var i = 0, len = input.length; i < len; i++)
+   {
+       var hand = getHand(input[i][0]);
+       winner = ((winner.score || 0) < hand.score) ? hand : winner;
+       if (winner.score == hand.score) winner.player = winner.player + ', ' + hand.player;
+   }
+
+   console.info($(tid).attr('winner'));
+
+   $('#A').append('<div>Test: ' + tid + $(tid).text() + '</br> Expected Winner: ' + $(tid).winner + '</br> Winner: ' + winner.player.split(',').slice(1) + '</br> Score: ' + winner.score + '</div>');
+});
+    </script>
+</head>
+<body>
+<div id="T0" winner="Joe, Joe1">
+    [['Joe, 3H, 4H, 5H, 6H, 8H'], ['Joe1, 3H, 4H, 5H, 6H, 8H'],
+    ['Bob, 3C, 3D, 3S, 8C, 10D'], 
+    ['Sally, AC, 10C, 5C, 2S, 2C']]
+</div>
+
+<div id="T1">
+	[['A, 2H, 10D, 3S, 2C, 5D'],
+	['B, 2D, 10C, 3D, 2H, 5S'],
+	['C, 2H, 9D, 3S, 2C, 5D'],
+	['D, 2H, 8D, 3S, 2C, 5D'],
+	['E, 2H, 7D, 3S, 2C, 5D']]
+</div>
+
+<div id="T2">
+	[['A, 2H, 10H, 3H, 2H, 5H'],
+	['B, 2C, 10C, 3C, 4C, 5C'],
+	['C, 2H, 9D, 3S, 2C, 5D'],
+	['D, 2H, 8D, 3S, 2C, 5C'],
+	['E, 2H, 7D, 3S, 2C, 5S']]
+</div>
+
+<div id="T3">
+	[['A, 2H, 9H, 3H, 2H, 5H'],
+	['B, 2C, 10C, 3C, 4C, 5C'],
+	['C, 2H, 9D, 3S, 2C, 5D'],
+	['D, 2H, 8D, 3S, 2C, 5C'],
+	['E, 2H, 7D, 3S, 2C, 5S']]
+</div>
+
+<div id="T4">
+	[['A, 2H, 2D, 2S, 4C, 5D'],
+	['B, 2H, 10D, 3S, 2C, 5D'],
+	['C, 7H, 7D, 6S, 2C, 5C'],
+	['D, 2H, 8D, 3S, 2C, 5S'],
+	['E, 2H, 7D, 3S, 2C, 5H']]
+</div>
+
+<div id="T5">
+	[['A, 2H, 10D, 3S, 2C, 5D'],
+	['B, 2D, 10C, 3D, 2H, 5S'],
+	['C, 2H, 10H, 3S, 2C, 5D'],
+	['D, 2H, 10D, 3S, 2C, 5D'],
+	['E, 2H, 7D, 3S, 2C, 5D']]
+</div>
+
+<div id="T6">
+	[['A, AH, AD, 3S, 2C, 5D'],
+	['B, AS, AC, 3D, 2H, 5S'],
+	['C, 2H, 9D, 3S, 2C, 5D'],
+	['D, 2H, 8D, 3S, 2C, 5D'],
+	['E, 2H, 7D, 3S, 2C, 5D']]
+</div>
+
+<div id="T7">
+	[['A, 6S, 6H, 5D, 4S, 3S'],
+	['B, 6D, 6C, 3D, 2H, 8S'],
+	['C, 2H, 9D, 3S, 2C, 5D'],
+	['D, 4H, 3D, 6S, 5S, 2S'],
+	['E, 2H, 7D, 3S, 8C, 9D']]
+</div>
+
+<div id="T8">
+	[['A, 6S, 6H, 6D, 10S, KH'],
+	['B, AS, AC, 3D, 2H, 5S'],
+	['C, 2H, 9D, 3S, 2C, 5D'],
+	['D, 7H, 7D, 7S, 2S, 3S'],
+	['E, 2H, 7D, 3S, 2C, 5D']]
+</div>
+
+<div id="A"></div>
+</body>
+</html>
