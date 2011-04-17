@@ -40,7 +40,6 @@ var evalHand = function(input){
     return {player: input[0],  score: hc + k2 + k3 + Math.pow(10, flush) * hc};
 };
 
-
 var runGame = function(selector, output){
 
     output.children().remove(); //$(output + ' > *').remove();
@@ -51,6 +50,8 @@ var runGame = function(selector, output){
         var input = node.text() || node.val();
         var hands = input.split('\n');
 
+        var timer = createTimer();
+
         var winner = {};
         for (var i = 0, len = hands.length; i < len; i++)
         {
@@ -59,7 +60,7 @@ var runGame = function(selector, output){
             winner.player += ((winner.score == hand.score) ? ', ' + hand.player : '');
         }
 
-        output.append('<div><br/>Test: ' +  node.attr('id') + ' ' + (node.attr('winner') || '') + ': ' + input + '</br> Winner: <b>' + winner.player.split(',').slice(1) + '</b></br> Score: ' + winner.score + '</div>');
+        output.append('<div><br/>Test: ' +  node.attr('id') + ' ' + (node.attr('winner') || '') + ': ' + input + '<br/> Winner: <b>' + winner.player.split(',').slice(1) + '</b><br/> Score: ' + winner.score + '<br/> Time(ms): ' + timer.getTicks() + '</div>');
     });
 };
 
@@ -72,5 +73,13 @@ var runGame = function(selector, output){
 // (6) the input contains the name of the player and the set of cards that form the player's hand where entities are comma-separated. 
 // (7) the player name does not contain spaces; if it does, they will not be present in the output (while the result will still be correct)
 // TODO: Provide error handling
+  
+var createTimer = function(startTime){
+    var timer = {};
+    timer.startTime = startTime || new Date();
+    timer.getTicks = function(endTime){ return (endTime || new Date()).getTime() - timer.startTime.getTime();  };
+    timer.reset = function(newTime){ timer.startTime = newTime || new Date()};
+    return timer;
+};
 
 //});

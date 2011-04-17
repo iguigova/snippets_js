@@ -39,7 +39,8 @@ The following assumptions were made:
 The algorithm is quite simple indeed. 
 
 The performance is decent: 
-
+A single hand evaluation take ~1ms. 
+10 hand evaluations take ~3ms.
 
 Later, the following discussions were brought to my attention: 
     . Cactus Kev's Poker Hand Evaluator (http://www.suffecool.net/poker/evaluator.html)
