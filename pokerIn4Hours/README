@@ -1,0 +1,46 @@
+This snippet was created in response to a 4 hour software developer test. There was a single task to be completed defined as follows: 
+
+<span style="color: #666666;">
+Implement a library (in the programming language of your choice) which evaluates who are the winner(s) among several 5 card poker hands (http://en.wikipedia.org/wiki/List_of_poker_hands). Note for this project that you only need to implement a subset of the regular poker hands:
+    . Flush
+    . Three of a Kind
+    . Two of a Kind
+    . High Card
+
+Input
+Collection of players in the showdown.
+Player Name
+5 Cards (each specifying the number and suit of the card)
+e.g., 
+    . Joe, 3H, 4H, 5H, 6H, 8H
+    . Bob, 3C, 3D, 3S, 8C, 10D
+    . Sally, AC, 10C, 5C, 2S, 2C
+
+Output
+Collection of winning players (more than one in case of a tie)
+e.g.,
+    . Joe
+
+Please state any assumptions you've made.
+
+</span>
+
+I chose Javascript for its felxibility and ease of use. I also decided to attempt to assign a value to each hand to represent its relative strength/score and avoid the need to sort and compare a set of hands. The winner of a game is the player with the highest score. 
+
+The following assumptions were made: 
+(1) the number of hands is a positive random integer
+(2) the number of cards in a hand is a positive random integer
+(3) the hands may have cards from more than one deck
+(4) duplicate cards within a hand are ignored (from the score)
+(5) each card is represented by 2-letter words, where the 1st letter identifies the face (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
+(6) the input contains the name of the player and the set of cards that form the player's hand where entities are comma-separated. 
+(7) the player name does not contain spaces; if it does, they will not be present in the output (while the result will still be correct)
+
+The algorithm is quite simple indeed. 
+
+The performance is decent: 
+
+
+Later, the following discussions were brought to my attention: 
+    . Cactus Kev's Poker Hand Evaluator (http://www.suffecool.net/poker/evaluator.html)
+    . Strategy Pattern (http://en.wikipedia.org/wiki/Strategy_pattern)

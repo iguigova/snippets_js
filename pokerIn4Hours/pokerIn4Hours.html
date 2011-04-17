@@ -1,19 +1,25 @@
 <html>
   <head>
-    <style>div {display: none;} #A, #A>div {display: block;} </style>
+    <style>.test {display: none;} .input {display: block; width: 200px;} </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script src="pokerIn4Hours.js"></script>
     <script type="text/javascript">
     </script>
 </head>
 <body>
-<div id="T0" winner="Joe">
+<textarea id="Manual" class="input"></textarea>
+<button type="button" onclick="runGame($('#Manual'), $('#A'))">Manual Test</button>
+<button type="button" onclick="runGame($('div[winner]'), $('#A'))">System Test</button>
+
+<div id="A" class="output"></div>
+
+<div id="T0" class="test" winner="Joe">
     Joe, 3H, 4H, 5H, 6H, 8H
     Bob, 3C, 3D, 3S, 8C, 10D
     Sally, AC, 10C, 5C, 2S, 2C
 </div>
 
-<div id="T1" winner="A, B">
+<div id="T1" class="test" winner="A, B">
     A, 2H, 10D, 3S, 2C, 5D
 	B, 2D, 10C, 3D, 2H, 5S
 	C, 2H, 9D, 3S, 2C, 5D
@@ -21,7 +27,7 @@
 	E, 2H, 7D, 3S, 2C, 5D
 </div>
 
-<div id="T2" winner="B">
+<div id="T2" class="test" winner="B">
 	A, 2H, 10H, 3H, 2H, 5H
 	B, 2C, 10C, 3C, 4C, 5C
 	C, 2H, 9D, 3S, 2C, 5D
@@ -29,7 +35,7 @@
 	E, 2H, 7D, 3S, 2C, 5S
 </div>
 
-<div id="T3" winner="B">
+<div id="T3" class="test" winner="B">
 	A, 2H, 9H, 3H, 2H, 5H
 	B, 2C, 10C, 3C, 4C, 5C
 	C, 2H, 9D, 3S, 2C, 5D
@@ -37,7 +43,7 @@
 	E, 2H, 7D, 3S, 2C, 5S
 </div>
 
-<div id="T4" winner="A">
+<div id="T4" class="test" winner="A">
 	A, 2H, 2D, 2S, 4C, 5D
 	B, 2H, 10D, 3S, 2C, 5D
 	C, 7H, 7D, 6S, 2C, 5C
@@ -45,7 +51,7 @@
 	E, 2H, 7D, 3S, 2C, 5H
 </div>
 
-<div id="T5" winner="A, B, C, D">
+<div id="T5" class="test" winner="A, B, C, D">
 	A, 2H, 10D, 3S, 2C, 5D
 	B, 2D, 10C, 3D, 2H, 5S
 	C, 2H, 10H, 3S, 2C, 5D
@@ -53,7 +59,7 @@
 	E, 2H, 7D, 3S, 2C, 5D
 </div>
 
-<div id="T6" winner="A, B">
+<div id="T6" class="test" winner="A, B">
 	A, AH, AD, 3S, 2C, 5D
 	B, AS, AC, 3D, 2H, 5S
 	C, 2H, 9D, 3S, 2C, 5D
@@ -61,7 +67,7 @@
 	E, 2H, 7D, 3S, 2C, 5D
 </div>
 
-<div id="T7" winner="B">
+<div id="T7" class="test" winner="B">
 	A, 6S, 6H, 5D, 4S, 3S
 	B, 6D, 6C, 3D, 2H, 8S
 	C, 2H, 9D, 3S, 2C, 5D
@@ -69,7 +75,7 @@
 	E, 2H, 7D, 3S, 8C, 9D
 </div>
 
-<div id="T8" winner="D">
+<div id="T8" class="test" winner="D">
 	A, 6S, 6H, 6D, 10S, KH
 	B, AS, AC, 3D, 2H, 5S
 	C, 2H, 9D, 3S, 2C, 5D
@@ -77,11 +83,10 @@
 	E, 2H, 7D, 3S, 2C, 5D
 </div>
 
-<div id="T9" winner="B">
+<div id="T9" class="test" winner="B">
     A, 5H, 5S, 4H, QD, QD
     B, 5C, 5D, AS, JC, 2C
 </div>
 
-<div id="A"></div>
 </body>
 </html>
