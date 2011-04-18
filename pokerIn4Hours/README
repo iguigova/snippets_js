@@ -1,6 +1,5 @@
-This snippet was created in response to a 4 hour software developer test. There was a single task to be completed defined as follows: 
-
-<span style="color: #666666;">
+This snippet was created in response to a 4 hour software developer test. It comprised the following task: 
+--------------------------------
 Implement a library (in the programming language of your choice) which evaluates who are the winner(s) among several 5 card poker hands (http://en.wikipedia.org/wiki/List_of_poker_hands). Note for this project that you only need to implement a subset of the regular poker hands:
     . Flush
     . Three of a Kind
@@ -22,8 +21,7 @@ e.g.,
     . Joe
 
 Please state any assumptions you've made.
-
-</span>
+--------------------------------
 
 I chose Javascript for its felxibility and ease of use. I also decided to attempt to assign a value to each hand to represent its relative strength/score and avoid the need to sort and compare a set of hands. The winner of a game is the player with the highest score. 
 
@@ -45,3 +43,13 @@ A single hand evaluation take ~1ms.
 Later, the following discussions were brought to my attention: 
     . Cactus Kev's Poker Hand Evaluator (http://www.suffecool.net/poker/evaluator.html)
     . Strategy Pattern (http://en.wikipedia.org/wiki/Strategy_pattern)
+
+
+***
+
+Since the completion of the task, I extended the computation to support a full set of poker hands in a 5-card or 7-card poker game. In practice, the number of cards in a hand does not matter. 
+
+TODO: 
+    . Document the algorithm
+    . Refactor/Cleanup the code
+    . Add a short discussion / conclusion / improvements section

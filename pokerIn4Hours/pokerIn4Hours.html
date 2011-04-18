@@ -1,6 +1,6 @@
 <html>
   <head>
-    <style>.test {display: none;} .input {display: block; width: 200px;} </style>
+    <style>.test, .wiki {display: none;} .input {display: block; width: 400px;} </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script src="pokerIn4Hours.js"></script>
     <script type="text/javascript">
@@ -10,6 +10,7 @@
 <textarea id="Manual" class="input"></textarea>
 <button type="button" onclick="runGame($('#Manual'), $('#A'))">Manual Test</button>
 <button type="button" onclick="runGame($('div[winner]'), $('#A'))">System Test</button>
+<button type="button" onclick="runGame($('.wiki'), $('#A'))">Wiki Test</button>
 
 <div id="A" class="output"></div>
 
@@ -86,6 +87,101 @@
 <div id="T9" class="test" winner="B">
     A, 5H, 5S, 4H, QD, QD
     B, 5C, 5D, AS, JC, 2C
+</div>
+
+<div id="T10" class="wiki" winner="A">
+    A, 7H, 6H, 5H, 4H, 3H
+    B, 5D, 4D, 3D, 2D, AD
+</div>
+
+<div id="T11" class="wiki" winner="A, B">
+    A, JS, 10S, 9S, 8S, 7S
+    B, JC, 10C, 9C, 8C, 7C
+</div>
+
+<div id="T12" class="wiki" winner="A">
+    A, 10S, 10C, 10H, 10D, 5C
+    B, 6C, 6H, 6D, 6S, KD
+</div>
+
+<div id="T13" class="wiki" winner="A">
+    A, 10S, 10C, 10H, 10D, QS
+    B, 10S, 10C, 10H, 10D, 5C
+</div>
+
+<div id="T14" class="wiki" winner="A">
+    A, 10S, 10C, 10H, 4D, 4C
+    B, 9H, 9S, 9D, AH, AS
+</div>
+
+<div id="T15" class="wiki" winner="A">
+    A, AD, AS, AH, 4C, 4S
+    B, AD, AH, AC, 3D, 3C
+</div>
+
+<div id="T16" class="wiki" winner="A">
+    A, AH, QH, 10H, 5H, 3H
+    B, KD, QD, JD, 9D, 6D
+</div>
+
+<div id="T17" class="wiki" winner="A">
+    A, AC, KC, 7C, 6C, 2C
+    B, AH, QH, 10H, 5H, 3H
+</div>
+
+<div id="T18" class="wiki" winner="A">
+    A, 8D, 7D, 6H, 5H, 4D 
+    B, 6C, 5D, 4C, 3H, 2S
+</div>
+
+<div id="T19" class="wiki" winner="A, B">
+    A, 8D, 7D, 6H, 5H, 4D
+    B, 8H, 7C, 6S, 5S, 4H
+</div>
+
+<div id="T20" class="wiki" winner="A">
+    A, QD, QS, QC, 5D, 3S 
+    B, 5S, 5H, 5C, QC, 10S
+</div>
+
+<div id="T21" class="wiki" winner="A">
+    A, 8S, 8H, 8C, AS, 2C
+    B, 8D, 8H, 8C, 5D, 3S
+</div>
+
+<div id="T22" class="wiki" winner="A">
+    A, KH, KC, 2S, 2C, JH 
+    B, JC, JD, 10D, 10S, 9D
+</div>
+
+<div id="T23" class="wiki" winner="A">
+    A, 9S, 9C, 7C, 7D, 6H
+    B, 9H, 9D, 5H, 5C, KS
+</div>
+
+<div id="T24" class="wiki" winner="A">
+    A, 4D, 4S, 3D, 3H, KC
+    B, 4H, 4C, 3C, 3S, 10D
+</div>
+
+<div id="T25" class="wiki" winner="A">
+    A, 10S, 10D, 6D, 4H, 2H
+    B, 9H, 9S, AH, QC, 10C
+</div>
+
+<div id="T26" class="wiki" winner="A">
+    A, 2C, 2H, 8D, 5S, 4S
+    B, 2S, 2D, 8S, 5H, 3H
+</div>
+
+<div id="T27" class="wiki" winner="A">
+    A, AC, 10C, 9D, 5S, 4S
+    B, KS, QC, JS, 8H, 7H
+</div>
+
+<div id="T28" class="wiki" winner="A">
+    A, AS, QS, 7C, 5H, 2S
+    B, AC, 10C, 9D, 5S, 4S
 </div>
 
 </body>
