@@ -55,22 +55,20 @@ var evalHand = function(input){
     }
     var f = reset(cardsofsuite['D']) + reset(cardsofsuite['H']) + reset(cardsofsuite['C']) + reset(cardsofsuite['S']);  // flush
 
-
     var score = function(cond, bigendian, littleendian, offset) {return (cond ? 1 : 0) * (bigendian + littleendian * Math.pow(10, (offset || 0)));}; 
 
-    var straightflush = score(f && s, 8, k);
-    var fourofakind = score(k4, 7, k4);
-    var fullhouse = score(p1 && k3, 6, p1 + k3 * Math.pow(10, 2));
-    var flush = score(f, 5, k);
-    var straight = score(s, 4, k);
-    var threeofakind = score(k3, 3, k3);
-    var twopair = score(p2, 2, p2 + p1 * Math.pow(10, 2));
-    var onepair = score(p1, 1, p1);
-    var highcard = score(hc, 0, k);
-
-    var pc = (straightflush || fourofakind || fullhouse || flush || straight || threeofakind || twopair || onepair) + highcard;
-
-    return {player: input[0],  score: pc};
+    return {
+        player: input[0],  
+        score: (score(s && f, 8, k)                              // straightflush
+                || score(k4, 7, k4)                              // fourofakind
+                || score(p1 && k3, 6, p1 + k3 * Math.pow(10, 2)) // fullhouse
+                || score(f, 5, k)                                // flush
+                || score(s, 4, k)                                // straight
+                || score(k3, 3, k3)                              // threeofakind
+                || score(p2, 2, p2 + p1 * Math.pow(10, 2))       // twopair
+                || score(p1, 1, p1))                             // onepair
+            + score(hc, 0, k)                                    // highcard
+    };
 };
 
 var runGame = function(selector, output){
