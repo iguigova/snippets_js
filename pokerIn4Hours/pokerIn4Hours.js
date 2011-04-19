@@ -3,105 +3,77 @@ var evalHand = function(input){
     if (!input) return;
     input = input.replace(/\s+/g, '').replace(/,[Jj]/g, ',11').replace(/,[Qq]/g, ',12').replace(/,[Kk]/g, ',13').replace(/,[Aa]/g, ',14').split(',');
 
-    var hand = {};
-    hand['D'] = [];
-    hand['H'] = [];
-    hand['C'] = [];
-    hand['S'] = [];
+    var hand = {D: [], H: [], C: [], S:[]};
     for (var i = 1, len = input.length; i < len; i++)
     {
         input[i] && (hand[input[i].slice(input[i].length - 1)][input[i].slice(0, input[i].length - 1)] = 1); 
     }
-    var col = function(c){ return (hand['D'][c]||0) + (hand['H'][c]||0) + (hand['C'][c]||0) + (hand['S'][c]||0)};
 
-
-    var tag = function(a, b, always) {a = a || 0; b = Math.min(b || 0, 1); return (b || always) ? a + b : 0};
-    var reset  = function(a) { return (a < 5) ? 0 : a};
-    var acc = function(idx){ 
-        idx = idx || -1;  
-        return function(a, m, b) {
-            b = (m === 1) ? b : 0; 
-            idx += (b) ? 1 : 0;
-            return (a || 0) + (b || 0) * Math.pow(10, Math.min(idx, 8));                                             
+    var card = function(suite, rank){return hand[suite][rank] || 0};
+    var cards = function(rank){ return card('D', rank) + card('H', rank) + card('C', rank) + card('S', rank); };
+    var kickers = function(idx){ 
+        idx = idx || -15;  
+        return function(all, cardinality, rank) {
+            rank = (cardinality === 1) ? rank : 0; 
+            idx += (rank) ? 1 : 0;
+            return (all || 0) + (rank || 0) * Math.pow(10, idx); //Math.min(idx, 9));                                             
         };
     }();
+   
+    var tag = function(a, b, always) {a = a || 0; b = Math.min(b || 0, 1); return (b || always) ? a + b : 0};
+    var reset = function(a) { return (a < 5) ? 0 : a};
 
-    var y = [];  // calculate based on card rank
-    var k4 = 0;  // four of a kind 
-    var k3 = 0;  // three of a kind
-    var p2 = 0;  // two pair / two one pairs
-    var p1 = 0;  // one pair / two of a kind
-    var hc = 0;  // high card
-    var sd = col(14);  // straight discriminant // count A as 1 or 14
-    var fd = 0;  // flush discriminant
+    var cardsofrank = []; 
+    var hc = 0;         // high card
+    var k4 = 0;         // four of a kind 
+    var k3 = 0;         // three of a kind
+    var p2 = 0;         // two pair / two one pairs
+    var p1 = 0;         // one pair / two of a kind
+    var k = 0;          // kickers
+    var sd = cards(14); // straight discriminant: count A as 1 or 14
     for (var i = 2; i < 15; i++)
     {
-        y[i] = col(i);
-        k4 = (y[i] === 4) ? i : k4;
-        k3 = (y[i] === 3) ? i * Math.pow(10, 2) : k3;
-        p2 = (y[i] === 2) && p1 ? p1 + i * Math.pow(10, 2) : p2;
-        p1 = (y[i] === 2) ? i : p1; 
-        hc = (y[i]) ? i : hc;
-        sd = tag(sd, y[i], sd >= 5);
-        fd = acc(fd, y[i], i);
+        cardsofrank[i] = cards(i);
+        hc = (cardsofrank[i]) ? i * Math.pow(10, -4) : hc;
+        k4 = (cardsofrank[i] === 4) ? hc : k4;
+        k3 = (cardsofrank[i] === 3) ? hc : k3;
+        p2 = (cardsofrank[i] === 2) ? p1 : p2;
+        p1 = (cardsofrank[i] === 2) ? hc : p1; 
+        k = kickers(k, cardsofrank[i], i);
+        sd = tag(sd, cardsofrank[i], sd >= 5);
     };
-    var fh = p1 + k3; // fullhouse
     var s = reset(sd); // straight
+    if (s && cards(14) && !cards(13)) { k = k - 14 * Math.pow(10, Math.min(sd, 9)); } // adjust for A as 1 or 14
 
-    if (s && col(14) && !col(13)) { fd = fd - 14*10000; } // adjust for A as 1 or 14
-
-    var x = []; // calculate based on suite
+    var cardsofsuite = {D: 0, H: 0, C: 0, S: 0};
     for (var i = 2; i < 15; i++)
     {
-        x['D'] = tag(x['D'], hand['D'][i], true);
-        x['H'] = tag(x['H'], hand['H'][i], true);
-        x['C'] = tag(x['C'], hand['C'][i], true);
-        x['S'] = tag(x['S'], hand['S'][i], true);
+        cardsofsuite['D'] = tag(cardsofsuite['D'], card('D', i), true);
+        cardsofsuite['H'] = tag(cardsofsuite['H'], card('H', i), true);
+        cardsofsuite['C'] = tag(cardsofsuite['C'], card('C', i), true);
+        cardsofsuite['S'] = tag(cardsofsuite['S'], card('S', i), true);
     }
-    var f = reset(x['D']) + reset(x['H']) + reset(x['C']) + reset(x['S']);  // flush
+    var f = reset(cardsofsuite['D']) + reset(cardsofsuite['H']) + reset(cardsofsuite['C']) + reset(cardsofsuite['S']);  // flush
 
-    console.info(y);
-    console.info(x);
-    console.info('k4 ' + k4);
-    console.info('p1 + k3 ' + p1 + k3);
-    console.info('fd ' + fd);
-    console.info('sd ' + sd);
-    console.info('s ' + s);
-    console.info('k3 ' + k3);
-    console.info('p2 ' + p2);
-    console.info('p1 ' + p1);
-    console.info('hc ' + hc);
 
-    var rlt = function(cond, bigendian, littleendian, p) {return (cond ? 1 : 0) * (bigendian + Math.pow(10, (p || -4)) * littleendian);}; 
-    var straightflush = rlt(f && s, 8, fd, -8);
-    var fourofakind = rlt(k4, 7, k4);
-    var fullhouse = rlt(p1 && k3, 6, p1 + k3);
-    var flush = rlt(f, 5, fd, -8);
-    var straight = rlt(s, 4, fd, -8);
-    var threeofakind = rlt(k3, 3, k3);
-    var twopair = rlt(p2, 2, p2);
-    var onepair = rlt(p1, 1, p1);
-    var highcard = rlt(hc, 0, fd, -8);
+    var score = function(cond, bigendian, littleendian, offset) {return (cond ? 1 : 0) * (bigendian + littleendian * Math.pow(10, (offset || 0)));}; 
+
+    var straightflush = score(f && s, 8, k);
+    var fourofakind = score(k4, 7, k4);
+    var fullhouse = score(p1 && k3, 6, p1 + k3 * Math.pow(10, 2));
+    var flush = score(f, 5, k);
+    var straight = score(s, 4, k);
+    var threeofakind = score(k3, 3, k3);
+    var twopair = score(p2, 2, p2 + p1 * Math.pow(10, 2));
+    var onepair = score(p1, 1, p1);
+    var highcard = score(hc, 0, k);
 
     var pc = (straightflush || fourofakind || fullhouse || flush || straight || threeofakind || twopair || onepair) + highcard;
-    console.info('score' + pc); 
-    console.info('straightflush ' + straightflush);
-    console.info('fourofakind' + fourofakind);
-    console.info('fullhouse' + fullhouse);
-    console.info('flush' + flush);
-    console.info('straight' + straight);
-    console.info('threeofakind' + threeofakind);
-    console.info('twopair' + twopair);
-    console.info('onepair' + onepair);
-    console.info('highcard' + highcard);
 
     return {player: input[0],  score: pc};
-
-//    return {player: input[0],  score: hc + k2 + k3 + Math.pow(10, flush) * hc};
 };
 
 var runGame = function(selector, output){
-
     output.children().remove(); //$(output + ' > *').remove();
 
     $(selector).each(function(idx){ 
@@ -125,8 +97,9 @@ var runGame = function(selector, output){
 };
 
 // Assumptions: 
+// (0) there's always at least one winner
 // (1) the number of hands is a positive random integer
-// (2) the number of cards in a hand is a positive random integer
+// (2) the number of cards in a hand is a positive random integer less than 13
 // (3) the hands may have cards from more than one deck
 // (4) duplicate cards within a hand are ignored (from the score)
 // (5) each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
@@ -145,3 +118,24 @@ var createTimer = function(startTime){
 //});
 
 // Debugging: 
+    // console.info(cardsofrank);
+    // console.info(cardsofsuite);
+    // console.info('k4 ' + k4);
+    // console.info('p1 + k3 ' + p1 + k3);
+    // console.info('k ' + k);
+    // console.info('sd ' + sd);
+    // console.info('s ' + s);
+    // console.info('k3 ' + k3);
+    // console.info('p2 ' + p2);
+    // console.info('p1 ' + p1);
+    // console.info('hc ' + hc);
+    // console.info('score' + pc); 
+    // console.info('straightflush ' + straightflush);
+    // console.info('fourofakind' + fourofakind);
+    // console.info('fullhouse' + fullhouse);
+    // console.info('flush' + flush);
+    // console.info('straight' + straight);
+    // console.info('threeofakind' + threeofakind);
+    // console.info('twopair' + twopair);
+    // console.info('onepair' + onepair);
+    // console.info('highcard' + highcard);

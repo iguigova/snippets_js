@@ -7,9 +7,7 @@ Implement a library (in the programming language of your choice) which evaluates
     . High Card
 
 Input
-Collection of players in the showdown.
-Player Name
-5 Cards (each specifying the number and suit of the card)
+Collection of players in the showdown: Player Name and 5 Cards (each specifying the number and suit of the card)
 e.g., 
     . Joe, 3H, 4H, 5H, 6H, 8H
     . Bob, 3C, 3D, 3S, 8C, 10D
@@ -26,13 +24,15 @@ Please state any assumptions you've made.
 I chose Javascript for its felxibility and ease of use. I also decided to attempt to assign a value to each hand to represent its relative strength/score and avoid the need to sort and compare a set of hands. The winner of a game is the player with the highest score. 
 
 The following assumptions were made: 
+(0) there's always at least one winner
 (1) the number of hands is a positive random integer
-(2) the number of cards in a hand is a positive random integer
+(2) the number of cards in a hand is a positive random integer less than 13
 (3) the hands may have cards from more than one deck
 (4) duplicate cards within a hand are ignored (from the score)
-(5) each card is represented by 2-letter words, where the 1st letter identifies the face (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
+(5) each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
 (6) the input contains the name of the player and the set of cards that form the player's hand where entities are comma-separated. 
 (7) the player name does not contain spaces; if it does, they will not be present in the output (while the result will still be correct)
+(8) the game is based on the standard poker rules as defined here: http://en.wikipedia.org/wiki/List_of_poker_hands 
 
 The algorithm is quite simple indeed. 
 
@@ -47,9 +47,8 @@ Later, the following discussions were brought to my attention:
 
 ***
 
-Since the completion of the task, I extended the computation to support a full set of poker hands in a 5-card or 7-card poker game. In practice, the number of cards in a hand does not matter. 
+Since the completion of the task, I extended the computation to support a full set of standard poker hands in a 5+ card game. In practice, the number of cards in a hand does not really matter but it makes sense that it would not exceed 13. 
 
 TODO: 
     . Document the algorithm
-    . Refactor/Cleanup the code
     . Add a short discussion / conclusion / improvements section
