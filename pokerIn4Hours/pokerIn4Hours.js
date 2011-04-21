@@ -1,7 +1,7 @@
 //$(function() {
 var evalHand = function(input){
     if (!input) return;
-    input = input.replace(/\s+/g, '').replace(/,[Jj]/g, ',11').replace(/,[Qq]/g, ',12').replace(/,[Kk]/g, ',13').replace(/,[Aa]/g, ',14').split(',');
+    input = input.replace(/\s+/g, '').replace(/,[Jj]/g, ',11').replace(/,[Qq]/g, ',12').replace(/,[Kk]/g, ',13').replace(/,[Aa]/g, ',14').toUpperCase().split(',');
 
     var hand = {D: [], H: [], C: [], S:[]};
     for (var i = 1, len = input.length; i < len; i++)
@@ -15,8 +15,8 @@ var evalHand = function(input){
         idx = idx || -15;  
         return function(all, cardinality, rank) {
             rank = (cardinality === 1) ? rank : 0; 
-            idx += (rank) ? 1 : 0;
-            return (all || 0) + (rank || 0) * Math.pow(10, idx); //Math.min(idx, 9));                                             
+            idx += (cardinality === 1) ? 1 : 0;;
+            return (all || 0) + rank * Math.pow(10, idx);                                           
         };
     }();
    
@@ -43,7 +43,8 @@ var evalHand = function(input){
         sd = tag(sd, cardsofrank[i], sd >= 5);
     };
     var s = reset(sd); // straight
-    if (s && cards(14) && !cards(13)) { k = k - 14 * Math.pow(10, Math.min(sd, 9)); } // adjust for A as 1 or 14
+
+    if (s && cards(14) && !cards(13)) { k = k - 14 * Math.pow(10, sd); } // adjust for A as 1 or 14
 
     var cardsofsuite = {D: 0, H: 0, C: 0, S: 0};
     for (var i = 2; i < 15; i++)
@@ -55,7 +56,9 @@ var evalHand = function(input){
     }
     var f = reset(cardsofsuite['D']) + reset(cardsofsuite['H']) + reset(cardsofsuite['C']) + reset(cardsofsuite['S']);  // flush
 
-    var score = function(cond, bigendian, littleendian, offset) {return (cond ? 1 : 0) * (bigendian + littleendian * Math.pow(10, (offset || 0)));}; 
+    var score = function(cond, bigendian, littleendian) {
+        return (cond ? 1 : 0) * (bigendian + littleendian);
+    }; 
 
     return {
         player: input[0],  
@@ -67,7 +70,7 @@ var evalHand = function(input){
                 || score(k3, 3, k3)                              // threeofakind
                 || score(p2, 2, p2 + p1 * Math.pow(10, 2))       // twopair
                 || score(p1, 1, p1))                             // onepair
-            + score(hc, 0, k)                                    // highcard
+            + score(hc, 0, k)                                    // highcard - tie breaker
     };
 };
 
@@ -103,7 +106,8 @@ var runGame = function(selector, output){
 // (5) each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
 // (6) the input contains the name of the player and the set of cards that form the player's hand where entities are comma-separated. 
 // (7) the player name does not contain spaces; if it does, they will not be present in the output (while the result will still be correct)
-// TODO: Provide error handling
+
+// TODO: Provide error handling, stats?
   
 var createTimer = function(startTime){
     var timer = {};
@@ -116,24 +120,23 @@ var createTimer = function(startTime){
 //});
 
 // Debugging: 
-    // console.info(cardsofrank);
-    // console.info(cardsofsuite);
+    // console.info('f ' + f);
     // console.info('k4 ' + k4);
-    // console.info('p1 + k3 ' + p1 + k3);
-    // console.info('k ' + k);
-    // console.info('sd ' + sd);
-    // console.info('s ' + s);
     // console.info('k3 ' + k3);
     // console.info('p2 ' + p2);
     // console.info('p1 ' + p1);
     // console.info('hc ' + hc);
-    // console.info('score' + pc); 
-    // console.info('straightflush ' + straightflush);
-    // console.info('fourofakind' + fourofakind);
-    // console.info('fullhouse' + fullhouse);
-    // console.info('flush' + flush);
-    // console.info('straight' + straight);
-    // console.info('threeofakind' + threeofakind);
-    // console.info('twopair' + twopair);
-    // console.info('onepair' + onepair);
-    // console.info('highcard' + highcard);
+    // console.info('k ' + k);
+    // console.info('sd ' + sd);
+    // console.info('s ' + s);
+
+    // console.info((score(s && f, 8, k)                            // straightflush
+    //             || score(k4, 7, k4)                              // fourofakind
+    //             || score(p1 && k3, 6, p1 + k3 * Math.pow(10, 2)) // fullhouse
+    //             || score(f, 5, k)                                // flush
+    //             || score(s, 4, k)                                // straight
+    //             || score(k3, 3, k3)                              // threeofakind
+    //             || score(p2, 2, p2 + p1 * Math.pow(10, 2))       // twopair
+    //             || score(p1, 1, p1))                             // onepair
+    //     + score(hc, 0, k));
+
