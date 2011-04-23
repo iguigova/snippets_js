@@ -1,6 +1,7 @@
 //$(function() {
 var evalHand = function(input){
     if (!input) return;
+
     input = input.replace(/\s+/g, '').replace(/,[Jj]/g, ',11').replace(/,[Qq]/g, ',12').replace(/,[Kk]/g, ',13').replace(/,[Aa]/g, ',14').toUpperCase().split(',');
 
     var hand = {D: [], H: [], C: [], S:[]};
@@ -56,9 +57,7 @@ var evalHand = function(input){
     }
     var f = reset(cardsofsuite['D']) + reset(cardsofsuite['H']) + reset(cardsofsuite['C']) + reset(cardsofsuite['S']);  // flush
 
-    var score = function(cond, bigendian, littleendian) {
-        return (cond ? 1 : 0) * (bigendian + littleendian);
-    }; 
+    var score = function(cond, bigendian, littleendian) { return (cond ? 1 : 0) * (bigendian + littleendian); }; 
 
     return {
         player: input[0],  
@@ -74,27 +73,23 @@ var evalHand = function(input){
     };
 };
 
-var runGame = function(selector, output){
-    output.children().remove(); //$(output + ' > *').remove();
+var evalGame = function(input, output, params){
+    var timer = createTimer();
 
-    $(selector).each(function(idx){ 
-
-        var node = $(this);
-        var input = node.text() || node.val();
-        var hands = input.split('\n');
-
-        var timer = createTimer();
-
-        var winner = {};
-        for (var i = 0, len = hands.length; i < len; i++)
-        {
-            var hand = evalHand(hands[i]) || {};
-            winner = ((winner.score || 0) < hand.score) ? hand : winner;
-            winner.player += ((winner.score == hand.score) ? ', ' + hand.player : '');
+    var winner = {player: '', score: 0};
+    for (var i = 0, len = input.length || input; i < len; i++)
+    {
+        var hand = evalHand(input[i] || createHand(params)) || {};
+        if (winner.score <= hand.score){
+            winner.player += ', ' + hand.player; 
+            winner = (winner.score < hand.score) ? hand : winner;
         }
+    }
 
-        output.append('<div><br/>Test: ' +  node.attr('id') + ' ' + (node.attr('winner') || '') + ': ' + input + '<br/> Winner: <b>' + winner.player.split(',').slice(1) + '</b><br/> Score: ' + winner.score + '<br/> Time(ms): ' + timer.getTicks() + '</div>');
-    });
+    output.append('<div><br/>Test [' + params + ']: ' + input 
+                  + '<br/> Winner: <b>' + winner.player + '</b>'
+                  + '<br/> Score: ' + winner.score 
+                  + '<br/> Time(ms): ' + timer.getTicks() + '</div>');
 };
 
 // Assumptions: 
@@ -115,6 +110,32 @@ var createTimer = function(startTime){
     timer.getTicks = function(endTime){ return (endTime || new Date()).getTime() - timer.startTime.getTime();  };
     timer.reset = function(newTime){ timer.startTime = newTime || new Date()};
     return timer;
+};
+
+var createHand = function(numofcards){
+    if (isNaN(numofcards)) return;
+
+    var rank = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    var suite = ['D', 'H', 'C', 'S'];
+    var ridx = function(m){ return (Math.round((Math.random()*Math.pow(10, 4))) % (m -1)) + 1; };
+    var card = function(){ return rank[ridx(13)] + suite[ridx(4)]; };
+    var hand = 'R';
+    for (var i = 0; i < numofcards; i++, hand += ',' + card()) {}
+    return hand;
+};
+
+var runGame = function(selector, output, params){
+    output.children().remove(); //$(output + ' > *').remove();
+
+    selector && $(selector).each(function(idx){ 
+        var node = $(this);
+        evalGame((node.text() || node.val()).split('\n'), output, node.attr('winner'));
+    });
+
+    params = params || {};
+    for (var j = 0; j < (params.exp || 0); j++){
+        evalGame(Math.pow(10, j), output, params.numofcards);
+    }
 };
 
 //});

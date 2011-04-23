@@ -1,17 +1,20 @@
 
 <html>
   <head>
-    <style>.test, .wiki {display: none;} .input {display: block; width: 400px;} </style>
+    <style>
+      .test, .wiki {display: none;}
+      .input {display: block;}
+      .input {width: 400px;} 
+    </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script src="pokerIn4Hours.js"></script>
-    <script type="text/javascript">
-    </script>
 </head>
 <body>
 <textarea id="Manual" class="input"></textarea>
-<button type="button" onclick="runGame($('#Manual'), $('#A'))">Manual Test</button>
-<button type="button" onclick="runGame($('div[winner]'), $('#A'))">System Test</button>
-<button type="button" onclick="runGame($('.wiki'), $('#A'))">Wiki Test</button>
+<button type="button" title="Evaluate the set of hands entered in the text area" onclick="runGame($('#Manual'), $('#A'))">Manual Test</button>
+<button type="button" title="Evaluate the set of hands defined within the html body" onclick="runGame($('div[winner]'), $('#A'))">System Test</button>
+<button type="button" title="Evaluate the set of hands defined on the wiki poker hands page" onclick="runGame($('.wiki'), $('#A'))">Wiki Test</button>
+<button type="button" title="Evaluate a randomly generated set of hands" onclick="runGame(null, $('#A'), {exp: 4, numofcards: 5})">Stress Test</button>
 
 <div id="A" class="output"></div>
 
