@@ -14,7 +14,8 @@
 <button type="button" title="Evaluate the set of hands entered in the text area" onclick="runGame($('#Manual'), $('#A'))">Manual Test</button>
 <button type="button" title="Evaluate the set of hands defined within the html body" onclick="runGame($('div[winner]'), $('#A'))">System Test</button>
 <button type="button" title="Evaluate the set of hands defined on the wiki poker hands page" onclick="runGame($('.wiki'), $('#A'))">Wiki Test</button>
-<button type="button" title="Evaluate a randomly generated set of hands" onclick="runGame(null, $('#A'), {exp: 4, numofcards: 5})">Stress Test</button>
+<button type="button" title="Evaluate an empty set of hands" onclick="runGame(null, $('#A'), {exp: 6})">Benchmark</button>
+<button type="button" title="Evaluate a randomly generated set of hands" onclick="runGame(null, $('#A'), {exp: 6, numofcards: 5})">Stress Test</button>
 
 <div id="A" class="output"></div>
 
