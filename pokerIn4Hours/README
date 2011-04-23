@@ -56,7 +56,7 @@ In this case, we have a pair with 3 kickers.
 
 We compute from the left to the right which guarantees us that we always use the best available cards for the score and that the algorithm works just as well for 7-card hands, for instance.
 
-This approach frees us from sorting cards and comparing hands. It uses fixed memory bound by the sparse 15 x 4 matrix. It runs in constant time needed to sum across the 13 used columns and the 4 rows.
+This approach frees us from sorting cards and comparing hands. It uses fixed memory bound by the sparse 15 x 4 matrix. For a single hand, it runs in constant time, O(1), needed to sum across the rows and the columns. If a game contains n hands, it will take O(n) time to score them all. 
 
 The trick is in how to assign a score that is 'unique'. Consider the following formulas:
 
@@ -73,23 +73,40 @@ One Pair        |          1 | p1
 High Card       |          0 | kickers
 
 where 
-kickers = sum(ri*(10^(-15 + i))) where ri is the rank of the i-th card
-k4 = hc*(10^-4) where hc is the highest rank that appears 4 times
-k3 = hc*(10^-4) where hc is the highest rank that appears 3 times
-p2 = hc*(10^-4) where hc is the second highest rank that appears 2 times
-p1 = hc*(10^-4) where hc is the highest crank that appears 2 times
+kickers = sum(ri*(10^(-15 + i))) where ri is the rank of the i-th card with cardinality 1
+k4 = r*(10^-4) where r is the highest rank of a card with cardinality 4
+k3 = r*(10^-4) where r is the highest rank of a card with cardinality 3
+p2 = r*(10^-4) where r is the second highest rank of a card with cardinality 2
+p1 = r*(10^-4) where r is the highest rank of a card with cardinality 2
 
-then the score = category * (category's big endian + category's little endian) + kickers.
+then the score = (category || 0) * (category's big endian + category's little endian) + kickers.
 
 The performance is decent:
-A single hand evaluation takes ~1ms.
-10 hand evaluations take ~3ms.
+In Chrome, a single hand evaluation takes ~1ms.
+    10 ->    ~1 ms
+   100 ->    ~6 ms
+  1000 ->   ~60 ms
+ 10000 ->  ~600 ms 
+100000 -> ~6000 ms
 
-Later, the following discussions were brought to my attention:
-    . Cactus Kev's Poker Hand Evaluator (http://www.suffecool.net/poker/evaluator.html)
-    . Strategy Pattern (http://en.wikipedia.org/wiki/Strategy_pattern)
+Some of the challenges included: 
+. ensure min/max value per category without overlap -> powers of 10, big/little endian
+. calculation of kickers vs high card -> cardinality
+. applying Ace as 1 or 14 in straights
+. understanding and verifying the various (standard) poker rules
+
+Some of other possible approaches (cf. See Also) include: 
+. use of base 13 computations
+. use of prime numbers where the product of two prime numbers is a 'unique' prime number
+
+See Also:
+. Strategy Pattern (http://en.wikipedia.org/wiki/Strategy_pattern)
+. Cactus Kev's Poker Hand Evaluator (http://www.suffecool.net/poker/evaluator.html)
+. Nick's Algorithm for evaluating poker hands ( http://nsayer.blogspot.com/2007/07/algorithm-for-evaluating-poker-hands.html)
 
 TODO:
-    . Document the algorithm
-    . Add a short discussion / conclusion / improvements section
-    . Come up with a way to incorporate probabilities
+. Document the algorithm
+. Add a short discussion / conclusion / improvements section
+. Do not ignore duplicate cards
+. Come up with a way to incorporate probabilities
+. Implement in another language (Haskell?) to see whether the overall performance is better
