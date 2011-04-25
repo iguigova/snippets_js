@@ -26,18 +26,16 @@ Since the initial completion of the task, I extended the implementation to suppo
 Javascript was chosen for its flexibility and ease of use.
 
 The following assumptions are made:
-(0) there's always at least one winner
-(1) the number of hands is a positive random integer
-(2) the number of cards in a hand is a positive random integer less than 13; the number of cards in a hand does not really matter but it makes sense that it would not exceed 13.
-(3) the hands may have cards from more than one deck
-(4) duplicate cards within a hand are ignored (from the score)
-(5) each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
-(6) the input contains the name of the player and the set of cards that form the player's hand where entities are comma-separated.
-(7) the player name does not contain spaces; if it does, they will not be present in the output (while the result will still be correct)
-(8) the game is based on the standard poker rules as defined here: http://en.wikipedia.org/wiki/List_of_poker_hands
+(1) The highest ranking hand (as per the standard poker hand ranking system, http://en.wikipedia.org/wiki/List_of_poker_hands) is the winning hand. There is always at least one winner.
+(2) The number of hands is a positive random integer.
+(3) The number of cards in a hand is a positive random integer less than 13. The number of cards in a hand does not really matter but it makes sense that it would not exceed 13.
+(4) The cards in a hand come from one deck. The process can be modified to support multiple decks but it will loose some of its transparency.
+(5) Each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
+(6) The input contains, per row, the name of the player and the set of cards that form the player's hand where entities are comma-separated. Multiple rows indicated multiple players. No checks are added to verify that the players are unique, have the same number of cards, and use one deck of cards.
+(7) The player name does not contain spaces; if it does, they will not be present in the output.
 
 The algorithm is quite simple:
-The objective is to assign a value to a hand of cards that reflects its strength/score according to the standard poker rules and avoid the need to sort and compare a set of hands. The winner of a game is the player with the highest score.
+The objective is to assign a value to a hand of cards that reflects its strength/score according to the standard poker hand ranking system and avoid the need to sort and compare a set of hands. The winner of a game is the player with the highest score.
 
 In order to compute the score, we view each hand as a two dimensional matrix. The sum across the columns gives us enough information to deduce whether we have four of a kind, three of a kind, two pair, or one pair. The sum across the rows gives us enough information to deduce whether we have  flush, straight, or straight flush. The last row also gives away the kickers.
 
@@ -52,28 +50,28 @@ For example, here is how 2H, 9D, 3S, 2C, QD looks like in such a matrix:
  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
  |  |  |  | 2| 1|  |  |  |  |  | 1|  |  | 1|  |  | 0|
  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-In this case, we have a pair with 3 kickers.
+In this case, we have a pair with 3 kickers (no straight, no flush).
 
 We compute from the left to the right which guarantees us that we always use the best available cards for the score and that the algorithm works just as well for 7-card hands, for instance.
 
-This approach frees us from sorting cards and comparing hands. It uses fixed memory bound by the sparse 15 x 4 matrix. For a single hand, it runs in constant time, O(1), needed to sum across the rows and the columns. If a game contains n hands, it will take O(n) time to score them all. 
+This approach frees us from sorting cards, comparing hands, or performing lookups. It uses fixed memory bound by the sparse 15 x 4 matrix. For a single hand, it runs in constant time, O(1), needed to sum across the rows and the columns. If a game contains n hands, it will take O(n) time to score them all. 
 
 The trick is in how to assign a score that is 'unique'. Consider the following formulas:
 
 Hand Categories | Big Endian | Little Endian
 ----------------|------------+--------------------
-Straight Flush  |          8 | kickers
-Four Of A Kind  |          7 | k4
-Full House      |          6 | p1 + k3*(10^2) 
-Flush           |          5 | kickers
-Straight        |          4 | kickers
-Three Of A Kind |          3 | k3
-Two Pair        |          2 | p2 + p1*(10^2)
-One Pair        |          1 | p1
-High Card       |          0 | kickers
+Straight Flush  |   s&f -> 8 | kickers
+Four Of A Kind  |    k4 -> 7 | k4
+Full House      | p1&k3 -> 6 | p1 + k3*(10^2) 
+Flush           |     f -> 5 | kickers
+Straight        |     s -> 4 | kickers
+Three Of A Kind |    k3 -> 3 | k3
+Two Pair        |    p2 -> 2 | p2 + p1*(10^2)
+One Pair        |    p1 -> 1 | p1
+High Card       |       -> 0 | kickers
 
 where 
-kickers = sum(ri*(10^(-15 + i))) where ri is the rank of the i-th card with cardinality 1
+kickers = sum(ri*(10^(-15 + i))) where ri is the rank of the i-th card with cardinality 1 which plays
 k4 = r*(10^-4) where r is the highest rank of a card with cardinality 4
 k3 = r*(10^-4) where r is the highest rank of a card with cardinality 3
 p2 = r*(10^-4) where r is the second highest rank of a card with cardinality 2
@@ -81,32 +79,90 @@ p1 = r*(10^-4) where r is the highest rank of a card with cardinality 2
 
 then the score = (category || 0) * (category's big endian + category's little endian) + kickers.
 
+For example - 
+Here is how 2H, 9D, 3S, 2C, QD (One Pair) score is computed:
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9|10|11|12|13|14|  |
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ | D|  |  |  |  |  |  |  |  |  | 1|  |  | 1|  |  | 0|
+ | H|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0|
+ | C|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0|
+ | S|  |  |  | 1|  |  |  |  |  |  |  |  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  |  |  | 2| 1|  |  |  |  |  | 1|  |  | 1|  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+Hand Categories | Big Endian | Little Endian    | Result
+----------------|------------+------------------|-------------
+Straight Flush  |   s&f -> 8 | kickers          | 0  
+Four Of A Kind  |    k4 -> 7 | k4               | 0
+Full House      | p1&k3 -> 6 | p1 + k3*(10^2)   | 0 
+Flush           |     f -> 5 | kickers          | 3*(10^-14) + 9*(10^-13) + 12*(10^-12)
+Straight        |     s -> 4 | kickers          | 0
+Three Of A Kind |    k3 -> 3 | k3               | 0
+Two Pair        |    p2 -> 2 | p2 + p1*(10^2)   | 0
+One Pair        |    p1 -> 1 | p1               | 0.0002 = 2*(10^-4)
+High Card       |       -> 0 | kickers          | 1.2930000000000001e-11    
+
+score = 1.0002000000129 = (p1) * (1 + 0.0002) + 1.2930000000000001e-11
+
+Here is how 10S, 10C, 10H, 4D, 4C (Full House) score is computed:
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9|10|11|12|13|14|  |
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ | D|  |  |  |  | 1|  |  |  |  |  |  |  |  |  |  | 0|
+ | H|  |  |  |  |  |  |  |  |  |  | 1|  |  |  |  | 0|
+ | C|  |  |  |  | 1|  |  |  |  |  | 1|  |  |  |  | 0|
+ | S|  |  |  |  |  |  |  |  |  |  | 1|  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  |  |  |  |  | 2|  |  |  |  |  | 3|  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+Hand Categories | Big Endian | Little Endian    | Result
+----------------|------------+------------------|-------------
+Straight Flush  |   s&f -> 8 | kickers          | 0  
+Four Of A Kind  |    k4 -> 7 | k4               | 0
+Full House      | p1&k3 -> 6 | p1 + k3*(10^2)   | 0.1004 = 0.0004 + 0.001(10^2)
+Flush           |     f -> 5 | kickers          | 0
+Straight        |     s -> 4 | kickers          | 0
+Three Of A Kind |    k3 -> 3 | k3               | 0.001 = 10(10^-4)
+Two Pair        |    p2 -> 2 | p2 + p1*(10^2)   | 0
+One Pair        |    p1 -> 1 | p1               | 0.0004 = 4*(10^-4)
+High Card       |       -> 0 | kickers          | 0    
+
+score = 6.1004 = (p1&k3) * (6 + 0.1004) + 0
+
+Note that it is possible to restore the hand from the score. 
+
 The performance is decent:
-In Chrome, a single hand evaluation takes ~1ms.
+In Chrome (10.0.648.205, AMD Turion, 1.6GHz, 512KB L2, 2GB DDR2), a single hand evaluation takes ~1ms.
     10 ->    ~1 ms
    100 ->    ~6 ms
   1000 ->   ~60 ms
  10000 ->  ~600 ms 
 100000 -> ~6000 ms
 
+It is likely that the same implementation in another language will yield better results. 
+
 Some of the challenges included: 
-. ensure min/max value per category without overlap -> powers of 10, big/little endian
-. calculation of kickers vs high card -> cardinality
-. applying Ace as 1 or 14 in straights
-. understanding and verifying the various (standard) poker rules
+. Ensure min/max value per category without overlap -> powers of 10, big/little endian
+. Calculation of kickers vs high card -> cardinality
+. Applying Ace as 1 or 14 in straights
+. Understanding and verifying the various (standard) poker rules
 
 Some of other possible approaches (cf. See Also) include: 
-. use of base 13 computations
-. use of prime numbers where the product of two prime numbers is a 'unique' prime number
+. Use of base 13 computations
+. Use of prime numbers where the product of two prime numbers is a 'unique' prime number
 
 See Also:
 . Strategy Pattern (http://en.wikipedia.org/wiki/Strategy_pattern)
 . Cactus Kev's Poker Hand Evaluator (http://www.suffecool.net/poker/evaluator.html)
 . Nick's Algorithm for evaluating poker hands ( http://nsayer.blogspot.com/2007/07/algorithm-for-evaluating-poker-hands.html)
+. Poker Stove (http://www.pokerstove.com/)
+. Probabilities in poker (http://wizardofodds.com/poker)
+. More Texas Holdem Analysis in C# (http://www.codeproject.com/KB/game/MoreTexasHoldemAnalysis1.aspx)
 
 TODO:
-. Document the algorithm
 . Add a short discussion / conclusion / improvements section
-. Do not ignore duplicate cards
 . Come up with a way to incorporate probabilities
 . Implement in another language (Haskell?) to see whether the overall performance is better

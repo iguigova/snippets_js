@@ -2,7 +2,7 @@
 <html>
   <head>
     <style>
-      .test, .wiki {display: none;}
+      .test, .wiki, .holdem {display: none;}
       .input {display: block;}
       .input {width: 400px;} 
     </style>
@@ -13,7 +13,6 @@
 <textarea id="Manual" class="input"></textarea>
 <button type="button" title="Evaluate the set of hands entered in the text area" onclick="runGame($('#Manual'), $('#A'))">Manual Test</button>
 <button type="button" title="Evaluate the set of hands defined within the html body" onclick="runGame($('div[winner]'), $('#A'))">System Test</button>
-<button type="button" title="Evaluate the set of hands defined on the wiki poker hands page" onclick="runGame($('.wiki'), $('#A'))">Wiki Test</button>
 <button type="button" title="Evaluate an empty set of hands" onclick="runGame(null, $('#A'), {exp: 6})">Benchmark</button>
 <button type="button" title="Evaluate a randomly generated set of hands" onclick="runGame(null, $('#A'), {exp: 6, numofcards: 5})">Stress Test</button>
 
@@ -34,7 +33,7 @@
 </div>
 
 <div id="T2" class="test" winner="B">
-	A, 2H, 10H, 3H, 2H, 5H
+	A, 2H, 10H, 3H, 2D, 5H
 	B, 2C, 10C, 3C, 4C, 5C
 	C, 2H, 9D, 3S, 2C, 5D
 	D, 2H, 8D, 3S, 2C, 5C
@@ -73,7 +72,7 @@
 	E, 2H, 7D, 3S, 2C, 5D
 </div>
 
-<div id="T7" class="test" winner="B">
+<div id="T7" class="test" winner="D">
 	A, 6S, 6H, 5D, 4S, 3S
 	B, 6D, 6C, 3D, 2H, 8S
 	C, 2H, 9D, 3S, 2C, 5D
@@ -187,6 +186,26 @@
 <div id="T28" class="wiki" winner="A">
     A, AS, QS, 7C, 5H, 2S
     B, AC, 10C, 9D, 5S, 4S
+</div>
+
+<div id="T29" class="holdem" winner="B">
+A, AD, KS, 6C, 5C, 4H, AH, 7S
+B, AD, KS, 6C, 5C, 4H, AH, 8S
+</div>
+
+<div id="T30" class="holdem" winner="A, B">
+A, AD, KH, QC, JD, 3S, AH, 7S
+B, AD, KH, QC, JD, 3S, AH, 8S
+</div>
+
+<div id="T31" class="holdem" winner="A">
+A, 8D, QS, 8H, 4S, KH, QD
+B, 8D, QS, 8H, 4S, QH, 10C
+</div>
+
+<div id="T32" class="holdem" winner="A,B">
+A, 8D, QS, 8H, 4S, KH, QD, AD
+B, 8D, QS, 8H, 4S, QH, 10C, AD
 </div>
 
 </body>

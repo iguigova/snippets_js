@@ -12,12 +12,11 @@ var evalHand = function(input){
 
     var card = function(suite, rank){return hand[suite][rank] || 0};
     var cards = function(rank){ return card('D', rank) + card('H', rank) + card('C', rank) + card('S', rank); };
-    var kickers = function(idx){ 
-        idx = idx || -15;  
+    var kickers = function(idx){ // http://en.wikipedia.org/wiki/Kicker_(poker)        
+        idx = idx || -15; 
+        var notplayed = Math.max(input.length - 1/*player input*/ - 5, 0);
         return function(all, cardinality, rank) {
-            rank = (cardinality === 1) ? rank : 0; 
-            idx += (cardinality === 1) ? 1 : 0;;
-            return (all || 0) + rank * Math.pow(10, idx);                                           
+            return (all || 0) + (((cardinality == 1) && (notplayed-- <= 0)) ? rank * Math.pow(10, ++idx) : 0);
         };
     }();
    
@@ -93,14 +92,13 @@ var evalGame = function(input, output, params){
 };
 
 // Assumptions: 
-// (0) there's always at least one winner
-// (1) the number of hands is a positive random integer
-// (2) the number of cards in a hand is a positive random integer less than 13
-// (3) the hands may have cards from more than one deck
-// (4) duplicate cards within a hand are ignored (from the score)
-// (5) each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
-// (6) the input contains the name of the player and the set of cards that form the player's hand where entities are comma-separated. 
-// (7) the player name does not contain spaces; if it does, they will not be present in the output (while the result will still be correct)
+// (1) The highest ranking hand (as per the standard poker hand ranking system, http://en.wikipedia.org/wiki/List_of_poker_hands) is the winning hand. There is always at least one winner.
+// (2) The number of hands is a positive random integer.
+// (3) The number of cards in a hand is a positive random integer less than 13. The number of cards in a hand does not really matter but it makes sense that it would not exceed 13.
+// (4) The cards in a hand come from one deck. The process can be modified to support multiple decks but it will loose some of its transparency.
+// (5) Each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
+// (6) The input contains, per row, the name of the player and the set of cards that form the player's hand where entities are comma-separated. Multiple rows indicated multiple players. No checks are added to verify that the players are unique, have the same number of cards, and use one deck of cards.
+// (7) The player name does not contain spaces; if it does, they will not be present in the output.
 
 // TODO: Provide error handling, stats?
   
