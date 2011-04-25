@@ -1,0 +1,279 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--------------------------------------------------------------------------->  
+<!--                           INTRODUCTION                                
+
+ The Code Project article submission template (HTML version)
+
+Using this template will help us post your article sooner. To use, just 
+follow the 3 easy steps below:
+ 
+     1. Fill in the article description details
+     2. Add links to your images and downloads
+     3. Include the main article text
+
+That's all there is to it! All formatting will be done by our submission
+scripts and style sheets. 
+
+-->  
+<!--------------------------------------------------------------------------->  
+<!--                        IGNORE THIS SECTION                            -->
+<html>
+<head>
+<title>The Code Project</title>
+<Style>
+BODY, P, TD { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+H2,H3,H4,H5 { color: #ff9900; font-weight: bold; }
+H2 { font-size: 13pt; }
+H3 { font-size: 12pt; }
+H4 { font-size: 10pt; color: black; }
+PRE { BACKGROUND-COLOR: #FBEDBB; FONT-FAMILY: "Courier New", Courier, mono; WHITE-SPACE: pre; }
+CODE { COLOR: #990000; FONT-FAMILY: "Courier New", Courier, mono; }
+</style>
+<link rel="stylesheet" type="text/css" href="http://www.codeproject.com/App_Themes/NetCommunity/CodeProject.css">
+</head>
+<body bgcolor="#FFFFFF" color=#000000>
+<!--------------------------------------------------------------------------->  
+
+
+<!-------------------------------     STEP 1      --------------------------->
+<!--  Fill in the details (CodeProject will reformat this section for you) -->
+
+<pre>
+Title:       Poker In Four Hours
+Author:      Ilka Guigova
+Email:       iguigova@gmail.com
+Language:    Javascript
+Platform:    Cross-platform
+Technology:  
+Level:       Intermediate/Advanced
+Description: Assign a value to a hand of cards that reflects its strength/score according to the standard poker hand ranking system and avoid the need to sort and compare a set of hands.
+Section      Algorithm & Recipes
+SubSection   General
+License:     CPOL (<a href="http://www.codeproject.com/info/licenses.aspx">CPOL, CPL, MIT, etc</a>)
+</pre>
+
+<!-------------------------------     STEP 2      --------------------------->
+<!--  Include download and sample image information.                       --> 
+
+<ul class=download>
+<li><a href="https://github.com/iguigova/snippets_js/tree/master/pokerIn4Hours">Download source - 8 Kb </a></li>
+</ul>
+
+
+<!-------------------------------     STEP 3      --------------------------->
+
+<!--  Add the article text. Please use simple formatting (<h2>, <p> etc)   -->
+
+<h2>Introduction</h2>
+
+<p>My only exposure to the game of poker has been a few hours in the last couple of weeks reading through the various hand ranking rules. It seems that the challenge of quickly finding the winner in a game is simple and yet elusive. Thus, the idea of producing a mapping between a poker hand and a small bounded entity, I thought, is worth some investigation. The code behind this article is a proof of concept of one such computational procedure.</p>
+
+<h2>Background</h2>
+<p>Originally, the code snippet was created in response to a 4 hour software developer test. It comprised the following task: </p>
+
+<i>
+<h4>Implement</h4> 
+<p>a library (in the programming language of your choice) which evaluates who are the winner(s) among several 5 card poker hands (http://en.wikipedia.org/wiki/List_of_poker_hands). Note for this project that you only need to implement a subset of the regular poker hands:</p>
+<ul type="square">
+  <li>Flush</li>
+  <li>Three of a Kind</li>
+  <li>Two of a Kind</li>
+  <li>High Card</li>
+</ul>
+<h4>Input</h4>
+<p>Collection of players in the showdown: Player Name and 5 Cards (each specifying the number and suit of the card) - e.g.,</p>
+<ul type="square">
+  <li>Joe, 3H, 4H, 5H, 6H, 8H</li>
+  <li>Bob, 3C, 3D, 3S, 8C, 10D</li>
+  <li>Sally, AC, 10C, 5C, 2S, 2C</li>
+</ul>
+<h4>Output</h4>
+<p>Collection of winning players (more than one in case of a tie) - e.g.,</p>
+<ul type="square">
+  <li>Joe</li>
+</ul>
+<p>Please state any assumptions you've made.</p>
+</i>
+
+  <h2>Implementation</h2>
+
+  <p>Since the initial completion of the task, the implementation was extended to support a full set of standard poker hands.</p>
+
+  <p>Javascript was chosen for its flexibility and ease of use. </p>
+
+<h3>Assumptions:</h3>
+<ol>
+  <li>The highest ranking hand (as per the standard poker hand ranking system, <a href="http://en.wikipedia.org/wiki/List_of_poker_hands">^</a>) is the winning hand. There is always at least one winner. </li>
+  <li>The number of hands is a positive random integer.</li>
+  <li>The number of cards in a hand is a positive random integer less than 13. The number of cards in a hand does not really matter but it makes sense that it would not exceed 13.</li>
+  <li>The cards in a hand come from one deck. The process can be modified to support multiple decks but it will loose some of its transparency.</li>
+  <li>Each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set <code>[1..10, J, Q, K, A]</code>) and the 2nd letter identifies the suite (i.e., is in the set <code>[D, H, C, S]</code>)</li>
+  <li>The input contains, per row, the name of the player and the set of cards that form the player's hand where entities are comma-separated. Multiple rows indicated multiple players. No checks are added to verify that the players are unique, have the same number of cards, and use one deck of cards.</li>
+  <li>The player name does not contain spaces; if it does, they will not be present in the output.</li>
+</ol>
+
+<h3>Algorithm:</h3>
+  <p>The objective is to assign a value to a hand of cards that reflects its strength/score according to the standard poker hand ranking system and avoid the need to sort and compare a set of hands. The winner of a game is the player with the highest score.</p>
+
+  <p>In order to compute the score, we view each hand as a two dimensional matrix. The sum across the columns gives us enough information to deduce whether we have four of a kind, three of a kind, two pair, or one pair. The sum across the rows gives us enough information to deduce whether we have  flush, straight, or straight flush. The last row also gives away the kickers.</p>
+
+  <p>For example, here is how <code>2H, 9D, 3S, 2C, QD</code> looks like in such a matrix:</p>
+<pre>
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9|10|11|12|13|14|  |
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ | D|  |  |  |  |  |  |  |  |  | 1|  |  | 1|  |  | 0|
+ | H|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0|
+ | C|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0| >-- col => cards of suite (flush, [0,5])
+ | S|  |  |  | 1|  |  |  |  |  |  |  |  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ 
+ |  |  |  | 2| 1|  |  |  |  |  | 1|  |  | 1|  |  | 0| >-- row => cards of rank (N of a kind, [1..4])
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                                                   ^---- cell => cards in sequence (straight, [0,5])
+</pre>
+  <p>In this case, we have a pair with 3 kickers (no straight, no flush).</p>
+
+  <p>We compute from the left to the right which guarantees us that we always use the best available cards for the score and that the algorithm works just as well for 7-card hands, for instance.</p>
+
+  <p>This approach frees us from sorting cards, comparing hands, or performing lookups. It uses fixed memory bound by the sparse 15 x 4 matrix. For a single hand, it runs in constant time, <code>O(1)</code>, needed to sum across the rows and the columns. If a game contains <code>n</code> hands, it will take <code>O(n)</code> time to score them all. </p>
+
+  <p>The trick is in how to assign a score that is 'unique'. Consider the following formulas:</p>
+<pre>
+Hand Categories | Big Endian | Little Endian
+----------------|------------+--------------------
+Straight Flush  |   s&f -> 8 | kickers
+Four Of A Kind  |    k4 -> 7 | k4
+Full House      | p1&k3 -> 6 | p1 + k3*(10^2) 
+Flush           |     f -> 5 | kickers
+Straight        |     s -> 4 | kickers
+Three Of A Kind |    k3 -> 3 | k3
+Two Pair        |    p2 -> 2 | p2 + p1*(10^2)
+One Pair        |    p1 -> 1 | p1
+High Card       |       -> 0 | kickers
+</pre>
+  <p>where </p>
+  <p>kickers = sum(ri*(10^(-15 + i))) where ri is the rank of the i-th card with cardinality 1 which plays</p>
+  <p>f = number of cards of the same suite if 5 or more, 0 otherwise</p>
+  <p>s = number of cards in sequence if 5 or more, 0 otherwise</p>
+  <p>k4 = r*(10^-4) where r is the highest rank of a card with cardinality 4</p>
+  <p>k3 = r*(10^-4) where r is the highest rank of a card with cardinality 3</p>
+  <p>p2 = r*(10^-4) where r is the second highest rank of a card with cardinality 2</p>
+  <p>p1 = r*(10^-4) where r is the highest rank of a card with cardinality 2</p>
+  <p>then the <b>score</b> = (category || 0) * (category's big endian + category's little endian) + kickers.</p>
+
+  <h3>Examples:</h3>
+  <p>Here is how <code>2H, 9D, 3S, 2C, QD</code> (One Pair) score is computed:</p>
+<pre>
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9|10|11|12|13|14|  |
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ | D|  |  |  |  |  |  |  |  |  | 1|  |  | 1|  |  | 0|
+ | H|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0|
+ | C|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0|
+ | S|  |  |  | 1|  |  |  |  |  |  |  |  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  |  |  | 2| 1|  |  |  |  |  | 1|  |  | 1|  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+Hand Categories | Big Endian | Little Endian    | Result
+----------------|------------+------------------|-------------
+Straight Flush  |   s&f -> 8 | kickers          | 0  
+Four Of A Kind  |    k4 -> 7 | k4               | 0
+Full House      | p1&k3 -> 6 | p1 + k3*(10^2)   | 0 
+Flush           |     f -> 5 | kickers          | 3*(10^-14) + 9*(10^-13) + 12*(10^-12)
+Straight        |     s -> 4 | kickers          | 0
+Three Of A Kind |    k3 -> 3 | k3               | 0
+Two Pair        |    p2 -> 2 | p2 + p1*(10^2)   | 0
+One Pair        |    p1 -> 1 | p1               | 0.0002 = 2*(10^-4)
+High Card       |       -> 0 | kickers          | 1.2930000000000001e-11    
+
+score = 1.0002000000129 = (p1) * (1 + 0.0002) + 1.2930000000000001e-11
+</pre>
+
+  <p>Here is how <code>10S, 10C, 10H, 4D, 4C</code> (Full House) score is computed:</p>
+<pre>
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9|10|11|12|13|14|  |
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ | D|  |  |  |  | 1|  |  |  |  |  |  |  |  |  |  | 0|
+ | H|  |  |  |  |  |  |  |  |  |  | 1|  |  |  |  | 0|
+ | C|  |  |  |  | 1|  |  |  |  |  | 1|  |  |  |  | 0|
+ | S|  |  |  |  |  |  |  |  |  |  | 1|  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ |  |  |  |  |  | 2|  |  |  |  |  | 3|  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+Hand Categories | Big Endian | Little Endian    | Result
+----------------|------------+------------------|-------------
+Straight Flush  |   s&f -> 8 | kickers          | 0  
+Four Of A Kind  |    k4 -> 7 | k4               | 0
+Full House      | p1&k3 -> 6 | p1 + k3*(10^2)   | 0.1004 = 0.0004 + 0.001(10^2)
+Flush           |     f -> 5 | kickers          | 0
+Straight        |     s -> 4 | kickers          | 0
+Three Of A Kind |    k3 -> 3 | k3               | 0.001 = 10(10^-4)
+Two Pair        |    p2 -> 2 | p2 + p1*(10^2)   | 0
+One Pair        |    p1 -> 1 | p1               | 0.0004 = 4*(10^-4)
+High Card       |       -> 0 | kickers          | 0    
+
+score = 6.1004 = (p1&k3) * (6 + 0.1004) + 0
+</pre>
+  <p>Note that it is possible to restore the hand from the score. </p>
+
+  <h3>Performance:</h3>
+  <p>In Chrome (10.0.648.205, AMD Turion, 1.6GHz, 512KB L2, 2GB DDR2), a single hand evaluation takes ~1ms.</p>
+<pre>
+    10 ->    ~1 ms
+   100 ->    ~6 ms
+  1000 ->   ~60 ms
+ 10000 ->  ~600 ms 
+100000 -> ~6000 ms
+</pre>
+  <p>To run it yourself, open the attached html file in a browser with javascript enabled. </p>
+
+  <p>It is likely that the same implementation in another language will yield better results. </p>
+
+  <h3>Challenges: </h3>
+<ul>
+  <li>Understanding and verifying the various poker hand ranking rules</li>
+  <li>Ensuring min/max value per category without overlap -> powers of 10, big/little endian</li>
+  <li>Calculation of kickers vs high card -> powers of 10, cardinality</li>
+  <li>Applying Ace as 1 or 14 in straights -> manual value reset</li>
+</ul>
+
+<pre lang="jscript">
+
+</pre>
+
+<h4>TODO:</h4>
+<ul>
+  <li>Add a short discussion / conclusion / improvements section</li>
+  <li>Come up with a way to incorporate probabilities</li>
+  <li>Implement in another language (Haskell?) to see whether the overall performance is better</li>
+</ul>
+
+<h4>Alternative Approaches (cf. See Also):</h4>
+<ul> 
+  <li>Use of base 13 computations</li>
+  <li>Use of prime numbers where the product of two prime numbers is a 'unique' prime number</li>
+</ul>
+
+<h3>See Also:</h3>
+<ul>
+  <li><a href="http://en.wikipedia.org/wiki/Strategy_pattern">Strategy Pattern</a></li>
+  <li><a href="http://www.suffecool.net/poker/evaluator.html">Cactus Kev's Poker Hand Evaluator</a></li>
+  <li><a href="http://nsayer.blogspot.com/2007/07/algorithm-for-evaluating-poker-hands.html">Nick's Algorithm for evaluating poker hands</a></li>
+  <li><a href="http://www.pokerstove.com/">Poker Stove</a></li>
+  <li><a href="http://wizardofodds.com/poker">Probabilities in poker</a></li>
+  <li><a href="http://www.codeproject.com/KB/game/MoreTexasHoldemAnalysis1.aspx">More Texas Holdem Analysis in C#</a></li>
+</ul>
+
+<h2>History</h2>
+
+<p>04/24/2011: First Published </p>
+
+<!-------------------------------    That's it!   --------------------------->
+</body>
+
+</html>
+ 

@@ -1,4 +1,6 @@
-This snippet was created in response to a 4 hour software developer test. It comprised the following task:
+My only exposure to the game of poker has been a few hours in the last couple of weeks reading through the various hand ranking rules. It seems that the challenge of quickly finding the winner in a game is simple and yet elusive. Thus, the idea of producing a mapping between a poker hand and a small bounded entity, I thought, is worth some investigation. The code behind this article is a proof of concept of one such computational procedure.
+
+Originally, this snippet was created in response to a 4 hour software developer test. It comprised the following task:
 -----------------------------------------------------
 Implement a library (in the programming language of your choice) which evaluates who are the winner(s) among several 5 card poker hands (http://en.wikipedia.org/wiki/List_of_poker_hands). Note for this project that you only need to implement a subset of the regular poker hands:
     . Flush
@@ -21,9 +23,9 @@ e.g.,
 Please state any assumptions you've made.
 -----------------------------------------------------
 
-Since the initial completion of the task, I extended the implementation to support a full set of standard poker hands.
+Since the initial completion of the task, the implementation was extended to support a full set of standard poker hands.
 
-Javascript was chosen for its flexibility and ease of use.
+Javascript was chosen for its flexibility and ease of use. It worked great for the proof of concept. 
 
 The following assumptions are made:
 (1) The highest ranking hand (as per the standard poker hand ranking system, http://en.wikipedia.org/wiki/List_of_poker_hands) is the winning hand. There is always at least one winner.
@@ -45,11 +47,13 @@ For example, here is how 2H, 9D, 3S, 2C, QD looks like in such a matrix:
  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
  | D|  |  |  |  |  |  |  |  |  | 1|  |  | 1|  |  | 0|
  | H|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0|
- | C|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0|
+ | C|  |  | 1|  |  |  |  |  |  |  |  |  |  |  |  | 0| >-- col => cards of suite (flush, [0,5])
  | S|  |  |  | 1|  |  |  |  |  |  |  |  |  |  |  | 0|
+ +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ 
+ |  |  |  | 2| 1|  |  |  |  |  | 1|  |  | 1|  |  | 0| >-- row => cards of rank (N of a kind, [1..4])
  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- |  |  |  | 2| 1|  |  |  |  |  | 1|  |  | 1|  |  | 0|
- +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                                                   ^---- cell => cards in sequence (straight, [0,5])
+
 In this case, we have a pair with 3 kickers (no straight, no flush).
 
 We compute from the left to the right which guarantees us that we always use the best available cards for the score and that the algorithm works just as well for 7-card hands, for instance.
@@ -72,6 +76,8 @@ High Card       |       -> 0 | kickers
 
 where 
 kickers = sum(ri*(10^(-15 + i))) where ri is the rank of the i-th card with cardinality 1 which plays
+f = number of cards of the same suite if 5 or more, 0 otherwise
+s = number of cards in sequence if 5 or more, 0 otherwise
 k4 = r*(10^-4) where r is the highest rank of a card with cardinality 4
 k3 = r*(10^-4) where r is the highest rank of a card with cardinality 3
 p2 = r*(10^-4) where r is the second highest rank of a card with cardinality 2
@@ -141,14 +147,15 @@ In Chrome (10.0.648.205, AMD Turion, 1.6GHz, 512KB L2, 2GB DDR2), a single hand 
   1000 ->   ~60 ms
  10000 ->  ~600 ms 
 100000 -> ~6000 ms
+To run it yourself, open the attached html file in a browser with javascript enabled. 
 
 It is likely that the same implementation in another language will yield better results. 
 
 Some of the challenges included: 
-. Ensure min/max value per category without overlap -> powers of 10, big/little endian
-. Calculation of kickers vs high card -> cardinality
-. Applying Ace as 1 or 14 in straights
-. Understanding and verifying the various (standard) poker rules
+. Understanding and verifying the various poker hand ranking rules
+. Ensuring min/max value per category without overlap -> powers of 10, big/little endian
+. Calculation of kickers vs high card -> powers of 10, cardinality
+. Applying Ace as 1 or 14 in straights -> manual value reset
 
 Some of other possible approaches (cf. See Also) include: 
 . Use of base 13 computations
