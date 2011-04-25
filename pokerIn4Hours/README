@@ -23,7 +23,7 @@ e.g.,
 Please state any assumptions you've made.
 -----------------------------------------------------
 
-Since the initial completion of the task, the implementation was extended to support a full set of standard poker hands.
+Since the initial completion of the task, the implementation was extended to support the full set of standard poker hands.
 
 Javascript was chosen for its flexibility and ease of use. It worked great for the proof of concept. 
 
@@ -32,12 +32,12 @@ The following assumptions are made:
 (2) The number of hands is a positive random integer.
 (3) The number of cards in a hand is a positive random integer less than 13. The number of cards in a hand does not really matter but it makes sense that it would not exceed 13.
 (4) The cards in a hand come from one deck. The process can be modified to support multiple decks but it will loose some of its transparency.
-(5) Each card is represented by 2-letter words, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
+(5) Each card is represented by a 2-letter word, where the 1st letter identifies the rank (i.e., is in the set [1..10, J, Q, K, A]) and the 2nd letter identifies the suite (i.e., is in the set [D, H, C, S])
 (6) The input contains, per row, the name of the player and the set of cards that form the player's hand where entities are comma-separated. Multiple rows indicated multiple players. No checks are added to verify that the players are unique, have the same number of cards, and use one deck of cards.
 (7) The player name does not contain spaces; if it does, they will not be present in the output.
 
 The algorithm is quite simple:
-The objective is to assign a value to a hand of cards that reflects its strength/score according to the standard poker hand ranking system and avoid the need to sort and compare a set of hands. The winner of a game is the player with the highest score.
+The objective is to assign a value to a hand of cards that reflects its strength/score according to the standard poker hand ranking system and avoid the need to sort and compare individual hands. The winner of a game is the player with the highest score.
 
 In order to compute the score, we view each hand as a two dimensional matrix. The sum across the columns gives us enough information to deduce whether we have four of a kind, three of a kind, two pair, or one pair. The sum across the rows gives us enough information to deduce whether we have  flush, straight, or straight flush. The last row also gives away the kickers.
 
