@@ -1,0 +1,16 @@
+%link{ rel: 'stylesheet', type: 'text/css', href: '/static/css/payment.css' }
+
+.payment-caption
+  = caption
+
+%form{ method: 'post' }
+  
+  - each plan in plans
+    .plan-item
+      %input{ type: 'radio', name: 'planId', value: plan.id, required: 'required' }
+        = plan.description
+  
+  .payment-continue
+    %input{ type: 'image', name: 'payPalPayment', alt: 'PayPal Payment', src: 'https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif'}
+    %input{ type: 'image', name: 'directPayment', alt: 'Direct Payment', src: 'https://images.highspeedbackbone.net/cart/pay_logo_mc.gif'}
+    %input{ type: 'image', name: 'directPayment', alt: 'DirectPayment', src: 'https://images.highspeedbackbone.net/cart/pay_logo_visa.gif'}

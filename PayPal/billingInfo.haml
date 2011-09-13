@@ -1,0 +1,101 @@
+
+-# Form Field Validation: http://home.cogeco.ca/~ve3ll/jstutorb.htm
+%form{ method: 'post' }
+  
+  .billinginfo
+    .billinginfo-row
+      %input{ type: 'hidden', name: 'planId', value: plan.id}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Country
+      .billinginfo-field
+        - var pattern = patterns['countryCode'].pattern
+          %select{ name: 'countryCode', required: 'required', pattern: pattern}
+            - each countryCode in countryCodes
+              %option{ value: countryCode.code}
+                = countryCode.name
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Card Type
+      .billinginfo-field
+        - var pattern = patterns['cardType'].pattern
+          %select{ name: 'cardType', required: 'required', pattern: pattern}
+            - each cardType in cardTypes
+              %option{ value: cardType.code}
+                = cardType.name
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Credit Card Number
+      .billinginfo-field
+        - var pattern = patterns['cardNumber'].pattern
+          %input{ type: 'text', name: 'cardNumber', required: 'required', pattern: pattern}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Expiration Date
+      .billinginfo-field
+        - var pattern = patterns['expiryMonth'].pattern
+          %input{ type: 'text', id: 'expiryMonth', name: 'expiryMonth', required: 'required', pattern: pattern}
+        &nbsp;\/
+        - var pattern = patterns['expiryYear'].pattern
+          %input{ type: 'text', id: 'expiryYear', name: 'expiryYear', required: 'required', pattern: pattern}
+        &nbsp; mm\/yyyy
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        CVV2
+      .billinginfo-field
+        - var pattern = patterns['cvv2'].pattern
+          %input{ type: 'text', name: 'cvv2', required: 'required', pattern: pattern}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        First Name
+      .billinginfo-field
+        - var pattern = patterns['firstName'].pattern
+          %input{ type: 'text', name: 'firstName', required: 'required', pattern: pattern}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Last Name
+      .billinginfo-field
+        - var pattern = patterns['lastName'].pattern
+          %input{ type: 'text', name: 'lastName', required: 'required', pattern: pattern}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Billing Address
+      .billinginfo-field
+        - var pattern = patterns['billingAddress'].pattern
+          %input{ type: 'text', name: 'billingAddress', required: 'required', pattern: pattern}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Postal / Zip Code
+      .billinginfo-field
+        - var pattern = patterns['zipCode'].pattern
+          %input{ type: 'text', name: 'zipCode', required: 'required', pattern: pattern}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        City
+      .billinginfo-field
+        - var pattern = patterns['city'].pattern
+          %input{ type: 'text', name: 'city', required: 'required', pattern: pattern}
+    
+    .billinginfo-row
+      .billinginfo-lbl
+        Province / State
+      .billinginfo-field
+        - var pattern = patterns['stateCode'].pattern
+          %select{ name: 'stateCode', required: 'required', pattern: pattern}
+            - each stateCode in stateCodes
+              %option{ value: stateCode.code}
+                = stateCode.name
+  
+  .payment-continue
+    %input{ type: 'submit', name: 'continue', value: 'Continue'}
+    %input{ type: 'submit', name: 'cancel', value: 'Cancel'}

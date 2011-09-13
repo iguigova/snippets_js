@@ -1,0 +1,13 @@
+%html
+  
+  %head
+  -#!=include_haml("ext-js")
+  
+  %body
+    - each param in params
+      %table
+        %tr
+          %td
+            = param.name
+          %td
+            = param.value

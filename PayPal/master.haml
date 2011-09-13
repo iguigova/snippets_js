@@ -1,0 +1,13 @@
+
+%link{ rel: 'stylesheet', type: 'text/css', href: '/static/css/payment.css' }
+
+.payment-caption
+  You have selected: 
+
+.plan-selected
+  = plan.description
+
+.payment-caption
+  = caption
+
+!= renderPage()

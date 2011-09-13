@@ -1,0 +1,58 @@
+
+This snippet is an extraction of a PayPal integration within the PointyHat framework.
+
+Payment package
+\ph-fx\packages\payment
+        \lib\paypal-website-payments-pro.js - generic Paypal API implementation
+        \config\paypal-config.js - generic PayPal API configuration (incl. Validation Patterns, Card Types, Country Codes, etc.)
+
+Payment configuration
+\config
+        sample-payment-config.js - PayPal configuration (incl. API credentials, payment methods, etc.)
+
+Payment controller
+\app\controllers
+        payment.js - Kehorah specific payment implementation (incl. views, redirects, tryPayment, etc.)
+
+Payment views
+\app\views\payment
+        plans.haml - the entry point
+        billingInfo.haml - the form that collects billing information for the direct payment method
+        review.haml - the hidden step of executing _ExpressCheckout command
+        confirmation.haml - the confirmation page for both payments
+        error.haml
+        cancel.haml
+        master.haml - the selection confirmation section
+
+Payment css
+\static\css
+        payment.css
+
+PayPal Website Payments Standard
+https://merchant.paypal.com/ca/cgi-bin/?cmd=_render-content&content_ID=merchant/wp_standard
+
+PayPal Website Payments Pro
+https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_WPWebsitePaymentsPro 
+https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/CA_Website_Payments_Pro_CA
+https://www.x.com/developers/paypal/products/website-payments-pro
+
+PayPal Website Payments Pro Integration Guide
+https://cms.paypal.com/cms_content/US/en_US/files/developer/PP_WPP_IntegrationGuide.pdf
+
+DoDirectPayment API
+https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_r_DoDirectPayment
+
+SetExpressCheckout API
+https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_r_SetExpressCheckout
+
+DoExpressCheckout API
+https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_r_DoExpressCheckoutPayment
+
+Error Codes 
+https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_errorcodes
+
+Name-Value Pair API Basics
+https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_NVPAPIBasics
+
+Question: 
+https://www.x.com/message/61542#61542
