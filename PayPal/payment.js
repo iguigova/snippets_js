@@ -196,15 +196,17 @@ exports.Payment = defineController({
 
                 var json = ph.fromNVP(content);
 
+                json.status = status;
+
                 if (json.ACK.indexOf('Success') > -1){
                     if (makePayment == pp.ECSetAPI && json.TOKEN){ // execute the Express Checkout Command
                         return self.redirect(pp.ECCmdUrl + json.TOKEN);
                     }
 
-                    return self.redirect(redirectConfirmation(planId) + ph.addNVP(content, {status: status}));
+                    return self.redirect(redirectConfirmation(planId) + ph.toNVP(json));
                 }
                 
-                return self.redirect(redirectError(planId) + ph.addNVP(content, {status: status}));
+                return self.redirect(redirectError(planId) + ph.toNVP(json));
             };
 
             var onError = function(message, status){
