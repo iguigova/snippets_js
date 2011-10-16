@@ -1,0 +1,109 @@
+
+/* BASIC CSS BAR GRAPH  */
+
+    .graph { 
+        position: relative; /* IE is dumb */
+        width: 200px; 
+        border: 1px solid #B1D632; 
+        padding: 2px; 
+    }
+    .graph .bar { 
+        display: block;
+        position: relative;
+        background: #B1D632; 
+        text-align: center; 
+        color: #333; 
+        height: 2em; 
+        line-height: 2em;            
+    }
+    .graph .bar span { 
+        position: absolute; left: 1em;
+    }
+
+
+/* COMPLEX CSS BAR GRAPH */
+
+    dl { 
+        margin: 0; 
+        padding: 0;                     
+    }
+    /*
+    dt { 
+        position: relative; /* IE is dumb /
+        clear: both;
+        display: block; 
+        float: left; 
+        width: 104px; 
+        height: 20px; 
+        line-height: 20px;
+        margin-right: 17px;              
+        font-size: .75em; 
+        text-align: right; 
+    }*/
+    dd { 
+        position: relative; /* IE is dumb */
+        display: block;                 
+        float: left;     
+        width: 197px; 
+        height: 20px; 
+        margin: 0 0 15px; 
+        background: url("images/g_colorbar.jpg"); 
+     }
+     * html dd { float: none; } 
+    /* IE is dumb; Quick IE hack, apply favorite filter methods for 
+    wider browser compatibility */
+
+     dd div { 
+        position: relative; 
+        background: url("images/g_colorbar2.jpg"); 
+        height: 20px; 
+        width: 75%; 
+        text-align:right; 
+     }
+     dd div strong { 
+        position: absolute; 
+        right: -5px; 
+        top: -2px; 
+        display: block; 
+        background: url("images/g_marker.gif"); 
+        height: 24px; 
+        width: 9px; 
+        text-align: left;
+        text-indent: -9999px; 
+        overflow: hidden;
+     }
+
+/* VERTICAL CSS BAR GRAPH */
+
+    #vertgraph {                    
+        width: 378px; 
+        height: 207px; 
+        position: relative; 
+        background: url("g_backbar.gif") no-repeat;
+    }
+    #vertgraph ul { 
+        width: 378px; 
+        height: 207px; 
+        margin: 0; 
+        padding: 0;
+    }
+    #vertgraph ul li {
+        list-style:none; 
+        position: absolute; 
+        width: 28px; 
+        height: 160px; 
+        bottom: 34px; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        background: url("images/colorbar.jpg") no-repeat !important;
+        text-align: center; 
+        font-weight: bold; 
+        color: white; 
+        line-height: 2.5em;
+    }
+
+    #vertgraph li.critical { left: 24px; background-position: 0px bottom !important; }
+    #vertgraph li.high { left: 101px; background-position: -28px bottom !important; }
+    #vertgraph li.medium { left: 176px; background-position: -56px bottom !important; }
+    #vertgraph li.low { left: 251px; background-position: -84px bottom !important; }
+    #vertgraph li.info { left: 327px; background-position: -112px bottom !important; }

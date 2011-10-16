@@ -1,0 +1,18 @@
+
+FusionCharts
+    . leverages Flash and Javascript (HTML5) and works both with XML and json
+    . used by PipelineDeals (http://demo.pipelinedeals.com/reports/dashboard)
+
+Ext JS 4 has a charting package, current version is at 3.2
+
+SalesForce uses images for their graphs.
+
+13 Useful JavaScript Solutions for Charts and Graphs
+http://webdesignledger.com/resources/13-useful-javascript-solutions-for-charts-and-graphs
+
+5 Top jQuery Chart Libraries for Interactive Charts
+http://www.1stwebdesigner.com/css/top-jquery-chart-libraries-interactive-charts/
+http://www.catswhocode.com/blog/how-to-easily-create-charts-using-jquery-and-html5
+
+Data Visualization With CSS: Graphs, Charts And More
+http://www.hongkiat.com/blog/data-visualization-with-css-graphs-charts-and-more/
