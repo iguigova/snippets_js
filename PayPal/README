@@ -1,4 +1,3 @@
-
 This snippet is an extraction of a PayPal integration within the PointyHat framework.
 
 Payment package
@@ -56,3 +55,8 @@ https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_ho
 
 Question: 
 https://www.x.com/message/61542#61542
+
+SEE ALSO: 
+http://josscrowcroft.github.com/money.js/
+https://github.com/recurly/recurly-js
+
