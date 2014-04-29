@@ -18,7 +18,9 @@ var evalMaxInSlidingWindow = function(datapoints, windowsize){
                     Acurr[j] = datapoints[i];
                 }
             }
-        } else {
+        } 
+        else 
+        {
             for(var j = 0; j < windowsize; j++)
             {
                 if (j < windowsize - 1)
@@ -57,10 +59,10 @@ var createTimer = function(startTime){
     return timer;
 };
 
-var run = function(datapoints, windowsize, output){
+var run = function(input, windowsize, output){
     output.children().remove();
 
-    datapoints && $(datapoints).each(function(idx){ 
+    input && $(input).each(function(idx){ 
         var node = $(this);
         evalSlidingWindow((node.val() || node.text()).split(' '), node.attr('windowsize') || windowsize.val(), node.attr('max'), output);        
     });
