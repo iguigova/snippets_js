@@ -1,0 +1,54 @@
+A question on StackOverflow caught my attention: http://stackoverflow.com/questions/23281172/efficiently-accumulate-sliding-window-percentage-changes-of-large-dataset
+
+I wanted to play with an idea inspired by the Simple Moving Average concept. 
+
+Let's consider 9 points with a sliding window of size 4. At any point, we'll keep track of the maximum values for all windows of size 4, 3, 2, and 1 respectively that end at that point. Suppose we store them in arrays...
+
+At position 1 (p1), we have one value (v1) and one window {p1}, the array A1 contains max(v1)
+At position 2 (p2), we have two values (v1, v2) and two windows {p1, p2} and {p2}, the array A2 contains max(v1, v2) and max(v2)
+At position 3 (p3), following the same pattern, the array A3 contains max(v1, v2, v3) = max(max(v1, v2), v3), max(v2, v3), and max(v3). Observe that we already know max(v1, v2) from A2
+Let's jump a bit and look at position 6 (p6), the array A6 contains max(v3, v4, v5, v6), max(v4, v5, v6), max(v5, v6), and max(v6). Again, we already know max(v3, v4, v5), max(v4, v5), and max(v5) from A5.
+Roughly, it looks something like this:
+
+    1  2  3  4  5  6  7  8  9
+
+    1  1  1  1
+    x  2  2  2  2
+    x  x  3  3  3  3
+    x  x  x  4  4  4  4
+                5  5  5  5
+                   6  6  6  6
+                      7  7  7
+                         8  8
+                            9
+This can be generalized as follows:
+
+Let 
+n   number of datapoints
+s   window size, 1 <= s <= n
+i   current position / datapoint, 1 <= s <= n
+Vi  value at position i
+Ai  array at position i (note: the array starts at 1 in this definition)
+
+then
+Ai (i <= s) has elements 
+aj = max(Vi, Ai-1[j]) for j in (1..i-1)
+aj = Vi for j = i
+aj = undefined/unimportant for j in (i+1..s)  
+
+Ai (i > s) has elements 
+aj = max(Vi, Ai-1[j+1]) for j in (1..s-1) 
+aj = Vi for j = s
+The max value for the window of size s at position i is given by Ai[1]. It is as simple as that : )
+
+Further, one gets as a bonus the max value for a window of any size x (0 < x <= s ) given by Ai[s - x + 1] for i > s.
+
+In my opinion the following is true:
+
+. Computational/time complexity is minimal. There is no sorting, insertion, deletion, or searching. Prove me wrong but doesn't this imply that it runs in O(n) where n is the number of data points
+
+. Space complexity is big (we are storing at least s arrays of size s) but only if we want to persist the result for future queries which run in O(1). Otherwise, only two arrays are necessary, Ai-1 and Ai; all we need in order to fill in the array at position i is the array at position i-1
+
+. We still cannot easily make this algorithm run in parallel processes
+
+. Using this algorithm to calculate min and max values, we can efficiently accumulate sliding window percentage changes of large dataset

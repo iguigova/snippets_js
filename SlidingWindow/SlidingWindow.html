@@ -1,0 +1,26 @@
+
+<html>
+  <head>
+    <style>
+      .test  {display: none;}
+      .input {display: block;}
+      .input {width: 400px;} 
+      button {display: block; width: 100; margin-top: 5; margin-bottom: 10}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script src="SlidingWindowAlgorithm.js"></script>
+</head>
+<body>
+Data points: <textarea id="DataPoints" class="input" rows="1">10 9 7 1 6 11 12 10 7 8 4</textarea>
+Window size: <textarea id="WindowSize" class="input" rows="1">4</textarea>
+<button type="button" title="Evaluate the maximums for the datapoints entered in the text area" onclick="run($('#DataPoints'), $('#WindowSize'), $('#A'))">Manual Test</button>
+<button type="button" title="Evaluate the maximums for the datapoints defined within the html body" onclick="run($('div[max]'), 0, $('#A'))">System Test</button>
+
+<div id="A" class="output"></div>
+
+<div id="T0" class="test" max="4 4 4 1" windowsize="3">4 1 1 1</div>
+
+<div id="T1" class="test" max="4 4 4 2" windowsize="3">4 1 2 1</div>
+
+</body>
+</html>
