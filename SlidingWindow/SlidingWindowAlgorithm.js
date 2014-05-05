@@ -67,3 +67,17 @@ var run = function(input, windowsize, output){
         evalSlidingWindow((node.val() || node.text()).split(' '), node.attr('windowsize') || windowsize.val(), node.attr('max'), output);        
     });
 };
+
+var randomarr = function(size){
+    var result = [];
+    for (var i = 0; i < size; i++){
+        result.push((Math.floor(Math.random()*100) + 1));
+    }  
+    return result;
+};
+
+var runrandom = function(input, windowsize, output){
+    output.children().remove();
+
+    evalSlidingWindow(randomarr(input.val()), windowsize.val(), undefined, output);
+};
