@@ -30,7 +30,7 @@ var evalHand = function(input){
     var p2 = 0;         // two pair / two one pairs
     var p1 = 0;         // one pair / two of a kind
     var k = 0;          // kickers
-    var sd = cards(14); // straight discriminant: count A as 1 or 14
+    var sd = Math.min(cards(14), 1); // straight discriminant: count A as 1 or 14
     for (var i = 2; i < 15; i++)
     {
         cardsofrank[i] = cards(i);
