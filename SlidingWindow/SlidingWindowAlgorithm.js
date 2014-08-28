@@ -44,11 +44,13 @@ var evalMaxInSlidingWindow = function(datapoints, windowsize){
 var evalSlidingWindow = function(datapoints, windowsize, params, output){
     var timer = createTimer();
 
-    output.append('<div><br/>Test [' + params + ']: ' 
+    output && output.append('<div><br/>Test [' + params + ']: ' 
                   + '<br/> Datapoints: ' + datapoints
                   + '<br/> WindowSize: ' + windowsize
                   + '<br/> Maximums: ' + evalMaxInSlidingWindow(datapoints, windowsize).toString()
                   + '<br/> Time(ms): ' + timer.getTicks() + '</div>');
+
+    return timer.getTicks();
 };
 
 var createTimer = function(startTime){
@@ -81,3 +83,9 @@ var runrandom = function(input, windowsize, output){
 
     evalSlidingWindow(randomarr(input.val()), windowsize.val(), undefined, output);
 };
+
+//WSH.Echo("Hello World");
+//WSH.Quit;
+//WSH.echo(randomarr(1000000));
+//WSH.echo(evalMaxInSlidingWindow(randomarr(1000000), 4));
+//WSH.echo(evalSlidingWindow(randomarr(1000000), 4000));
