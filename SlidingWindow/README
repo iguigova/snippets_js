@@ -1,5 +1,7 @@
 A question on StackOverflow caught my attention: http://stackoverflow.com/questions/23281172/efficiently-accumulate-sliding-window-percentage-changes-of-large-dataset
 
+UPDATED: THIS ALGORITHM IS SLOW, IT IS NAIVE AND RUNS IN O(n*k) TIME WHICH IS UNACCEPTABLE. HERE IS A VERY COOL SOLUTION TO THE PROBLEM: http://richardhartersworld.com/cri/2001/slidingmin.html (the ascending minima algorithm)!
+
 I wanted to play with an idea inspired by the Simple Moving Average concept. 
 
 Let's consider 9 points with a sliding window of size 4. At any point, we'll keep track of the maximum values for all windows of size 4, 3, 2, and 1 respectively that end at that point. Suppose we store them in arrays...
