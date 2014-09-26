@@ -1,0 +1,67 @@
+<html>
+<body onload="Test()">
+<script>
+function Filter(dictionary, letter, pos){ // Return a subset of words containing letter @ pos
+    var result = [];
+
+    for(idx in dictionary){ 
+        var word = dictionary[idx];
+        if (word[pos] == letter){
+            result.push(word);
+        }
+    }
+
+    return result;
+}
+
+function Match(dictionary, input, pos){ // Return the length of the word appearing in input @ pos
+    var result = 0;
+    
+    for (var i = pos; (i <= input.length) && (dictionary.length > 0); i++){
+
+        for (idx in dictionary){ // Matches are valid only if they constitute an entire word
+            if (dictionary[idx].length == i - pos){
+                result = i - pos;
+                break;
+            }
+        }
+
+        dictionary = Filter(dictionary, input[i], i - pos);
+    }
+    
+    return result;
+}
+
+function Sequence(dictionary, input){ // Given a short input string and a set of words, split the input string into a space separated sequence of words in the set
+    var result = [];
+
+    var pos = 0;
+    var len = Match(dictionary, input, pos);
+
+    while ((len > 0) && (pos + len <= input.length)){
+        result.push(input.substring(pos, pos + len));
+        pos = pos + len;
+        len = Match(dictionary, input, pos);
+    }
+    
+    result = (pos == input.length) ? result : []; // optional: check whether we matched the entire input string
+
+    var output = '';
+    for (idx in result){
+        output = output + ' ' + result[idx];
+    }
+
+    return output; // TODO: remove the last white space if it is there
+}
+
+function Test(){
+   console.log(Sequence(["tesla", "test", "now"], "testteslanow") + " = test tesla now");
+   console.log(Sequence(["race", "car", "no", "not", "able", "table", "notable"], "racecar") + " = race car");
+   console.log(Sequence(["race", "car", "no", "not", "able", "table", "notable"], "notable") + " = notable");
+   console.log(Sequence(["race", "car", "no", "not", "able", "table", "notable"], "raceasdfjfhjhgf") + " = ");
+   console.log(Sequence(["race", "car", "no", "not", "able", "table", "notable"], "notcar") + " = not car");
+}
+
+</script>
+</body>
+</html>

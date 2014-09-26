@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <style>
+      .input {display: block; width: 400px;}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script src="Parser.js"></script>
+  </head>
+  <body>
+    <textArea id="Input" class="input"></textArea>
+    <button type="button" title="Parse" onClick="parse($('#Input'), $('#Output'))">Parse</button>
+    <div id="Output" class="output"></div>
+  </body>
+</html>
