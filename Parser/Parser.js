@@ -6,12 +6,13 @@ var parse = function(input, output){
         
         var timer = createTimer();
         var text = input.text() || input.val() + ' ';
+
         output.append('<div>'
                       + log('text length', text.length)
                       + logPattern('tokens', text, '\\s+')
                       + logTokens('characters', text, 'abcdefghijklmnopqrstuvwxyz', true)
-                     // + logTokens('special', text, '.?[]\/_-!')
-                      + logTokens('tokens', text, removeDuplicates(text.split(/\s+/g)))
+                      + logTokens('special characters', text, '@#$%^&*-_=+{};:\'"|<>,.?()[]\/!', true)
+                      + logTokens('tokens', text, removeDuplicates(text.split(/\s+/g)).sort())
                       + '</div>');
 
         output.append('<div>' + log('time (ms)', timer.getTicks()) + '</div>');
@@ -22,13 +23,13 @@ var logTokens = function(label, text, tokens, ignoreUndefined){
     var t = log(label, ' ');
     for (var i = 0, len = (tokens || []).length; i < len; i++){
         var token = tokens[i];
-        t += logPattern(token, text, token, ignoreUndefined);
+        t += logPattern(token, text, escape(token, function(match){ return '\\' + match }), ignoreUndefined);
     }
     return t;
 }
 
 var logPattern = function(label, text, pattern, ignoreUndefined){
-    return log(label, (text.match(new RegExp(escape(pattern), 'gi')) || []).length, ignoreUndefined);
+    return log(label, (text.match(new RegExp(pattern, 'gi')) || []).length, ignoreUndefined);
 }
 
 var log = function(label, value, ignoreUndefined){
@@ -52,7 +53,7 @@ var removeDuplicates = function(arr){
     var result = [];
 
     for (var i = 0, len = arr.length, obj = {}; i < len; i++){
-        var el = arr[i];
+        var el = escape(arr[i], '');
         if (!obj[el]){
             obj[el] = 1;
             result.push(el);
@@ -61,6 +62,6 @@ var removeDuplicates = function(arr){
     return result;
 };
 
-var escape = function(pattern){
-    return pattern;
+var escape = function(pattern, value){
+    return pattern.replace(/[?!@#\$%\^\&*\)\(\[\]\{\}\<\>;:'"|\\\/+=.,_-]/gi, value);
 }
