@@ -9,7 +9,6 @@ var parse = function(input, output){
 
         output.append('<div>'
                       + log('text length', text.length)
-                      + logPattern('tokens', text, '\\s+')
                       + logTokens('characters', text, 'abcdefghijklmnopqrstuvwxyz', true)
                       + logTokens('special characters', text, '@#$%^&*-_=+{};:\'"|<>,.?()[]\/!', true)
                       + logTokens('tokens', text, removeDuplicates(text.split(/\s+/g)).sort())
@@ -20,16 +19,12 @@ var parse = function(input, output){
 }
 
 var logTokens = function(label, text, tokens, ignoreUndefined){
-    var t = log(label, ' ');
-    for (var i = 0, len = (tokens || []).length; i < len; i++){
-        var token = tokens[i];
-        t += logPattern(token, text, escape(token, function(match){ return '\\' + match }), ignoreUndefined);
+    var scoredTokens = scoreTokens(text, tokens);
+    var loggedTokens = log(label, ' ');
+    for (var i = 0, len = scoredTokens.length; i < len; i++){
+        loggedTokens += log(scoredTokens[i].token, scoredTokens[i].score, ignoreUndefined);
     }
-    return t;
-}
-
-var logPattern = function(label, text, pattern, ignoreUndefined){
-    return log(label, (text.match(new RegExp(pattern, 'gi')) || []).length, ignoreUndefined);
+    return loggedTokens;
 }
 
 var log = function(label, value, ignoreUndefined){
@@ -64,4 +59,18 @@ var removeDuplicates = function(arr){
 
 var escape = function(pattern, value){
     return pattern.replace(/[?!@#\$%\^\&*\)\(\[\]\{\}\<\>;:'"|\\\/+=.,_-]/gi, value);
+}
+
+var scoreTokens = function(text, tokens){
+    var result = [];
+
+    for (var i = 0, len = (tokens || []).length; i < len; i++){
+        result.push({'token': tokens[i], 'score': scoreToken(text, escape(tokens[i], function(match){ return '\\' + match }))});
+    }
+
+    return result;
+}
+
+var scoreToken = function(text, token){
+    return (text.match(new RegExp(token, 'gi')) || []).length;
 }
